@@ -11,9 +11,11 @@ namespace cs3210 {
     }
 
     void Environment::update(unsigned int cycles) {
-        for (auto& row : grid) {
-            for (auto& unit : row) {
-                unit.update();
+        for (int i = 0; i < cycles; ++i) {
+            for (auto &row : grid) {
+                for (auto &unit : row) {
+                    unit.update();
+                }
             }
         }
     }
