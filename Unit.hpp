@@ -12,7 +12,7 @@ namespace cs3210 {
         unsigned int x;
         unsigned int y;
     public:
-        void update();
+        virtual void update();
     };
 
 }
