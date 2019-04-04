@@ -7,6 +7,7 @@
 
 #include "Unit.hpp"
 
+#include <string>
 #include <vector>
 
 namespace cs3210 {
@@ -18,7 +19,10 @@ namespace cs3210 {
     class Environment {
     private:
         Grid<Unit> grid;
-    public:;
+        Unit parseUnit(char ch, const std::vector<std::string>& speciesLines) const;
+    public:
+        Environment(const std::vector<std::string>& mapLines, const std::vector<std::string>& speciesLines);
+
         void update();
         void update(unsigned int cycles);
     };
