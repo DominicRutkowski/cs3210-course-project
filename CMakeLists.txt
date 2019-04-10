@@ -3,4 +3,4 @@ project(cs3210_course_project)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(cs3210_course_project main.cpp Environment.cpp Environment.hpp Unit.cpp Unit.hpp Obstacle.cpp Obstacle.hpp Organism.cpp Organism.hpp Plant.cpp Plant.hpp Animal.cpp Animal.hpp Herbivore.cpp Herbivore.hpp Omnivore.cpp Omnivore.hpp)
+add_executable(cs3210_course_project main.cpp Environment.cpp Environment.hpp Unit.hpp Obstacle.cpp Obstacle.hpp)
