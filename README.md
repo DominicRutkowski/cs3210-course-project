@@ -35,7 +35,7 @@ If you have any questions or concerns, please reach out as soon as you develop t
 
 ### Progress tracking through Github
 
-Due to the long-running nature of this project, **we'll be using Github to host the project's code and track your development progress**. If you don't have a Github account, please create one using your @uiowa.edu email address. If you have an existing Github account you'd like to use, please make sure your @uiowa.edu email is listed as your [public email](https://github.com/settings/profile). 
+Due to the long-running nature of this project, **we'll be using Github ([https://github.com](https://github.com)) to host the project's code and track your development progress**. If you don't have a Github account, please create one using your @uiowa.edu email address. If you have an existing Github account you'd like to use, please make sure your @uiowa.edu email is listed as your [public email](https://github.com/settings/profile). 
 
 Once you are logged in to Github, follow [these instructions](https://help.github.com/en/articles/create-a-repo) to **create a private repository for your project**, then invite **@agurtovoy** and **@srinvsn** as [collaborators](https://help.github.com/en/articles/inviting-collaborators-to-a-personal-repository). 
 
@@ -73,6 +73,7 @@ Saving the current ecosystem state to a file simply means saving the current sta
 8. Each animal has a current energy level as well as a "max" energy level that limits the number of energy points they can absorb. All animals start the simulation with a current energy level equal to their "max" level. Each move subtracts one point from their current energy level. An animal with zero energy points dies and is removed from the simulation. 
 9. An animal can consume another organism only if it can add a greater-than-zero number of the consumed organism's energy points to its energy level without going over its "max" limit. To consume another organism, the consumer has to move to the organism's position.
 10. Two adjacent animals of the same species with the current energy level that is more than a half of their "max" can produce an offspring (given that there is space next to either of them to place the offspring).
+11. Animals act in their own interest: e.g. if an animal is in danger of being eaten, it'll try to escape, if it's running out of energy, it'll seek to replenish it, etc.
 
 
 ## Stretch goals (optional)
@@ -118,4 +119,8 @@ The map is the only absolute requirement, but feel free to print out anything el
 
 ### How do the animals choose when and where to move?
 
-The specific algorithm is up to you, but there is a requirement that the animals will act in their own interest — e.g. if an animal is in danger of being eaten and can avoid it, it should try to; if the animal is running out of energy, it should seek to replenish it; etc. You can still introduce an element of randomness to this — e.g. an animal that is in danger might from time to time get “distracted” and get eaten anyway.
+The specific algorithm is up to you, but see [ecosystem rule #11](#ecosystem-rules). You can still introduce an element of randomness to this — e.g. an animal that is in danger might from time to time get “distracted” and get eaten anyway.
+
+### Do I need to test my simulation with any other data other than what's provided in the [`input`](input/) directory?
+
+Yes, it's both [required](#grading--progress-tracking) and highly recommended to use a variety of inputs (correct and incorrect) to fully explore the system's behavior as it's being developed. You are also welcome to include interesting cases of highly stable or otherwise unsual ecosystems as a part of your project submission.
