@@ -5,8 +5,12 @@
 #ifndef CS3210_COURSE_PROJECT_ENVIRONMENT_HPP
 #define CS3210_COURSE_PROJECT_ENVIRONMENT_HPP
 
+#include "Obstacle.hpp"
 #include "Unit.hpp"
+#include "ViableUnit.hpp"
 
+#include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -18,13 +22,10 @@ namespace cs3210 {
 
     class Environment {
     private:
-        Grid<Unit> grid;
-        Unit parseUnit(char ch, const std::vector<std::string>& speciesLines) const;
+        Grid<std::unique_ptr<Unit>> grid;
+        std::unique_ptr<Unit> parseUnit(char ch, const std::vector<std::string>& speciesLines) const;
     public:
         Environment(const std::vector<std::string>& mapLines, const std::vector<std::string>& speciesLines);
-
-        void update();
-        void update(unsigned int cycles);
     };
 
 }
