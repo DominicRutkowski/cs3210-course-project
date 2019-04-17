@@ -17,7 +17,7 @@ namespace cs3210 {
     private:
     public:
         virtual const std::string toString() const = 0;
-        virtual const UnitType getType() const = 0;
+        virtual const UnitType getUnitType() const = 0;
     };
 
 }

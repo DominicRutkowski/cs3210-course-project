@@ -13,7 +13,7 @@ namespace cs3210 {
         return symbol;
     }
 
-    const UnitType Obstacle::getType() const {
+    const UnitType Obstacle::getUnitType() const {
         return UnitType::OBSTACLE;
     }
 

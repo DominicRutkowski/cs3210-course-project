@@ -13,7 +13,7 @@ namespace cs3210 {
         return plant->toString();
     }
 
-    const UnitType ViableUnit::getType() const {
+    const UnitType ViableUnit::getUnitType() const {
         return UnitType::VIABLE_UNIT;
     }
 

@@ -6,6 +6,7 @@
 #include <vector>
 
 int main() {
+
     // Open ./input/map.txt and write its contents to mapStr
     std::vector<std::string> mapLines;
     std::string mapIn;
@@ -35,6 +36,8 @@ int main() {
     }
 
     cs3210::Environment environment(mapLines, speciesLines);
+
+    std::cout << environment.toString();
 
     return 0;
 }

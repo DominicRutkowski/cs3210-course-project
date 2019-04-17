@@ -19,7 +19,7 @@ namespace cs3210 {
         std::unique_ptr<Animal> animal;
     public:
         const std::string toString() const override;
-        const UnitType getType() const override;
+        const UnitType getUnitType() const override;
     };
 
 }

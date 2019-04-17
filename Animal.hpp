@@ -11,12 +11,18 @@
 
 namespace cs3210 {
 
+    enum class AnimalType {
+        HERBIVORE, OMNIVORE
+    };
+
     class Animal : public Organism {
     protected:
+        const AnimalType animalType;
         const std::vector<std::string> foodChain;
     public:
-        Animal(const std::string& symbol, const unsigned int maxEnergy, unsigned int energy, const std::vector<std::string>& foodChain);
+        Animal(const std::string& symbol, const unsigned int maxEnergy, unsigned int energy, const AnimalType& animalType, const std::vector<std::string>& foodChain);
         const std::string toString() const override;
+        const AnimalType getAnimalType() const;
     };
 
 }
