@@ -21,7 +21,9 @@ namespace cs3210 {
             for (auto& unit : row) {
                 if (unit->getUnitType() == UnitType::VIABLE_UNIT) {
                     auto& viableUnit = dynamic_cast<ViableUnit&>(*unit);
-                    viableUnit.iteratePlant();
+                    if (viableUnit.getPlant() != nullptr) {
+                        viableUnit.iteratePlant();
+                    }
                 }
             }
         }
