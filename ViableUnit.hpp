@@ -18,6 +18,12 @@ namespace cs3210 {
         std::unique_ptr<Plant> plant;
         std::unique_ptr<Animal> animal;
     public:
+        void setPlant(std::unique_ptr<Plant> plant);
+        void setAnimal(std::unique_ptr<Animal> animal);
+
+        const std::unique_ptr<Plant>& getPlant();
+        const std::unique_ptr<Animal>& getAnimal();
+
         const std::string toString() const override;
         const UnitType getUnitType() const override;
     };

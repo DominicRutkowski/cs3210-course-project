@@ -6,11 +6,30 @@
 
 namespace cs3210 {
 
+    void ViableUnit::setPlant(std::unique_ptr<Plant> plant) {
+        this->plant = std::move(plant);
+    }
+
+    void ViableUnit::setAnimal(std::unique_ptr<Animal> animal) {
+        this->animal = std::move(animal);
+    }
+
+    const std::unique_ptr<Plant>& ViableUnit::getPlant() {
+        return plant;
+    }
+
+    const std::unique_ptr<Animal>& ViableUnit::getAnimal() {
+        return animal;
+    }
+
     const std::string ViableUnit::toString() const {
         if (animal != nullptr) {
             return animal->toString();
+        } else if (plant != nullptr) {
+            return plant->toString();
+        } else {
+            return " ";
         }
-        return plant->toString();
     }
 
     const UnitType ViableUnit::getUnitType() const {

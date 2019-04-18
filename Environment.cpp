@@ -33,11 +33,11 @@ namespace cs3210 {
             char typeChar = speciesDefinition.at(typeCharIndex);
             if (ch == typeChar) { // Occupied space
                 std::string organismClassification = speciesDefinition.substr(0, typeCharIndex - 1);
-                return std::unique_ptr<Obstacle>(new Obstacle("X"));
+                return std::unique_ptr<ViableUnit>(new ViableUnit());
             }
         }
         if (ch == ' ') { // Empty space
-            return std::unique_ptr<Obstacle>(new Obstacle(" ")); // Issue with empty spaces being default constructed.. add constructor
+            return std::unique_ptr<ViableUnit>(new ViableUnit());
         } else { // Obstacle
             return std::unique_ptr<Obstacle>(new Obstacle(std::string(1, ch)));
         }
