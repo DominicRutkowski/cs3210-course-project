@@ -9,6 +9,7 @@
 #include "Plant.hpp"
 #include "Unit.hpp"
 
+#include <iostream>
 #include <memory>
 
 namespace cs3210 {
@@ -18,6 +19,9 @@ namespace cs3210 {
         std::unique_ptr<Plant> plant;
         std::unique_ptr<Animal> animal;
     public:
+        void iteratePlant();
+        void iterateAnimal();
+
         void setPlant(std::unique_ptr<Plant> plant);
         void setAnimal(std::unique_ptr<Animal> animal);
 

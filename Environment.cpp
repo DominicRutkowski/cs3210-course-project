@@ -17,7 +17,34 @@ namespace cs3210 {
     }
 
     void Environment::iterate(unsigned int iterations) {
-        // Logic here
+        for (auto& row : grid) {
+            for (auto& unit : row) {
+                if (unit->getUnitType() == UnitType::VIABLE_UNIT) {
+                    auto& viableUnit = dynamic_cast<ViableUnit&>(*unit);
+                    viableUnit.iteratePlant();
+                }
+            }
+        }
+        for (auto& row : grid) {
+            for (auto& unit : row) {
+                if (unit->getUnitType() == UnitType::VIABLE_UNIT) {
+                    auto& viableUnit = dynamic_cast<ViableUnit&>(*unit);
+                    if (viableUnit.getAnimal() != nullptr && viableUnit.getAnimal()->getAnimalType() == AnimalType::HERBIVORE) {
+                        viableUnit.iterateAnimal();
+                    }
+                }
+            }
+        }
+        for (auto& row : grid) {
+            for (auto& unit : row) {
+                if (unit->getUnitType() == UnitType::VIABLE_UNIT) {
+                    auto& viableUnit = dynamic_cast<ViableUnit&>(*unit);
+                    if (viableUnit.getAnimal() != nullptr && viableUnit.getAnimal()->getAnimalType() == AnimalType::OMNIVORE) {
+                        viableUnit.iterateAnimal();
+                    }
+                }
+            }
+        }
     }
 
     std::string Environment::toString() const {
