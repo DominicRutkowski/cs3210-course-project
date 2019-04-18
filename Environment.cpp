@@ -32,8 +32,21 @@ namespace cs3210 {
             unsigned int typeCharIndex = speciesDefinition.find(' ') + 1;
             char typeChar = speciesDefinition.at(typeCharIndex);
             if (ch == typeChar) { // Occupied space
+                std::unique_ptr<ViableUnit> unit(new ViableUnit());
+
                 std::string organismClassification = speciesDefinition.substr(0, typeCharIndex - 1);
-                return std::unique_ptr<ViableUnit>(new ViableUnit());
+                if (organismClassification == "plant") {
+                    int div = speciesDefinition.find(' ', 8);
+                    unsigned int regrowthCoefficient = std::stoi(speciesDefinition.substr(8, div - 8));
+                    unsigned int energy = std::stoi(speciesDefinition.substr(div + 1));
+
+                    unit->setPlant(std::unique_ptr<Plant>(new Plant(std::string(1, ch), energy, energy, regrowthCoefficient)));
+                } else if (organismClassification == "herbivore") {
+
+                } else if (organismClassification == "omnivore") {
+
+                }
+                return unit;
             }
         }
         if (ch == ' ') { // Empty space
