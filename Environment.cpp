@@ -41,10 +41,19 @@ namespace cs3210 {
                     unsigned int energy = std::stoi(speciesDefinition.substr(div + 1));
 
                     unit->setPlant(std::unique_ptr<Plant>(new Plant(std::string(1, ch), energy, energy, regrowthCoefficient)));
-                } else if (organismClassification == "herbivore") {
+                } else {
+                    unsigned int energy = std::stoi(speciesDefinition.substr(speciesDefinition.find(']') + 2));
 
-                } else if (organismClassification == "omnivore") {
+                    std::string foodChainStr = speciesDefinition.substr(speciesDefinition.find('[') + 1, speciesDefinition.find(']') - speciesDefinition.find('[') - 1);
+                    std::vector<std::string> foodChain;
+                    for (int i = 0; i < foodChainStr.length(); ++i) {
+                        if (i % 3 == 0) {
+                            foodChain.push_back(std::string(1, foodChainStr[i]));
+                        }
+                    }
 
+                    AnimalType animalType = organismClassification == "herbivore" ? AnimalType::HERBIVORE : AnimalType::OMNIVORE;
+                    unit->setAnimal(std::unique_ptr<Animal>(new Animal(std::string(1, ch), energy, energy, animalType, foodChain)));
                 }
                 return unit;
             }
