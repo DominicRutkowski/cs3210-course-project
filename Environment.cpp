@@ -16,6 +16,10 @@ namespace cs3210 {
         }
     }
 
+    void Environment::iterate(unsigned int iterations) {
+        // Logic here
+    }
+
     std::string Environment::toString() const {
         std::string result;
         for (int i = 0; i < grid.size(); ++i) {

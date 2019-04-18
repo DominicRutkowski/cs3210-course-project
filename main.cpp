@@ -1,9 +1,22 @@
 #include "Environment.hpp"
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
+
+// https://stackoverflow.com/a/313990/7300063
+std::string toLowerCase(const std::string& string) {
+    std::string str = string;
+    std::transform(str.begin(), str.end(), str.begin(), tolower);
+    return str;
+}
+
+// https://stackoverflow.com/a/17976083/7300063
+bool isUnsignedInt(const std::string& str) {
+    return !str.empty() && std::all_of(str.begin(), str.end(), isdigit);
+}
 
 int main() {
 
@@ -36,8 +49,27 @@ int main() {
     }
 
     cs3210::Environment environment(mapLines, speciesLines);
+    std::cout << "Initial environment:\n\n" << environment.toString() << std::endl;
 
-    std::cout << environment.toString();
+    std::string rawInput;
+    while (true) {
+        std::cout << "Enter a command: ";
+        getline(std::cin, rawInput);
+
+        std::string input = toLowerCase(rawInput);
+        if (input == "quit" || input == "q" || input == "-1") {
+            break;
+        } else if (isUnsignedInt(input)) {
+            environment.iterate(std::stoi(input));
+        } else if (input.empty()) {
+            environment.iterate();
+        } else {
+            std::cerr << "Invalid command... quitting" << std::endl;
+            break;
+        }
+
+        std::cout << std::endl << environment.toString() << std::endl;
+    }
 
     return 0;
 }

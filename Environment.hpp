@@ -26,6 +26,9 @@ namespace cs3210 {
         std::unique_ptr<Unit> parseUnit(char ch, const std::vector<std::string>& speciesLines) const;
     public:
         Environment(const std::vector<std::string>& mapLines, const std::vector<std::string>& speciesLines);
+
+        void iterate(unsigned int iterations = 1);
+
         std::string toString() const;
     };
 
