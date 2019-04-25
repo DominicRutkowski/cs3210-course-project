@@ -59,7 +59,9 @@ namespace cs3210 {
             for (int j = 0; j < grid[i].size(); ++j) {
                 result += grid[i][j]->toString();
             }
-            result += "\n";
+            if (i < grid.size() - 1) {
+                result += "\n";
+            }
         }
         return result;
     }

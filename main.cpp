@@ -57,12 +57,34 @@ int main() {
         getline(std::cin, rawInput);
 
         std::string input = toLowerCase(rawInput);
-        if (input == "quit" || input == "q" || input == "-1") {
+        std::string command = input.find(' ') == std::string::npos ? input.substr(0, input.find(' ')) : input;
+
+        // Quit
+        if (command == "quit" || command == "q" ||  command == "-1") {
             break;
+
+        // Save
+        } else if (command == "write" || command == "w" || command == "save" || command == "s") {
+            std::fstream saveMap("../input/map.txt");
+            saveMap << environment.toString();
+            saveMap.close();
+
+        // Save and quit
+        } else if (command == "wq") {
+            std::fstream saveMap("../input/map.txt");
+            saveMap << environment.toString();
+            saveMap.close();
+            break;
+
+        // Iterate n times
         } else if (isUnsignedInt(input)) {
             environment.iterate(std::stoi(input));
+
+        // Iterate once
         } else if (input.empty()) {
             environment.iterate();
+
+        // Invalid command, quit
         } else {
             std::cerr << "Invalid command... quitting" << std::endl;
             break;
