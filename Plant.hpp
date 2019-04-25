@@ -14,7 +14,8 @@ namespace cs3210 {
         const unsigned int regrowthCoefficient;
         unsigned int iterationsUntilGrowth;
     public:
-        Plant(const std::string& symbol, const unsigned int maxEnergy, unsigned int energy, const unsigned int regrowthCoefficient);
+        Plant(const std::string& symbol, const unsigned int maxEnergy, const unsigned int regrowthCoefficient);
+        void iterate();
         const std::string toString() const override;
     };
 

@@ -73,7 +73,7 @@ namespace cs3210 {
                     unsigned int regrowthCoefficient = std::stoi(speciesDefinition.substr(8, div - 8));
                     unsigned int energy = std::stoi(speciesDefinition.substr(div + 1));
 
-                    unit->setPlant(std::unique_ptr<Plant>(new Plant(std::string(1, ch), energy, energy, regrowthCoefficient)));
+                    unit->setPlant(std::unique_ptr<Plant>(new Plant(std::string(1, ch), energy, regrowthCoefficient)));
                 } else {
                     unsigned int energy = std::stoi(speciesDefinition.substr(speciesDefinition.find(']') + 2));
 

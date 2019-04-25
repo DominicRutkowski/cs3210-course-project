@@ -7,7 +7,9 @@
 namespace cs3210 {
 
     void ViableUnit::iteratePlant() {
-
+        if (animal == nullptr) {
+            plant->iterate();
+        }
     }
 
     void ViableUnit::iterateAnimal() {

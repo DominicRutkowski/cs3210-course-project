@@ -6,8 +6,14 @@
 
 namespace cs3210 {
 
-    Plant::Plant(const std::string& symbol, const unsigned int maxEnergy, unsigned int energy, const unsigned int regrowthCoefficient):
-    Organism(symbol, maxEnergy, energy), regrowthCoefficient{regrowthCoefficient} {}
+    Plant::Plant(const std::string& symbol, const unsigned int maxEnergy, const unsigned int regrowthCoefficient):
+    Organism(symbol, maxEnergy, maxEnergy), regrowthCoefficient{regrowthCoefficient}, iterationsUntilGrowth{0} {}
+
+    void Plant::iterate() {
+        if (iterationsUntilGrowth > 0) {
+            --iterationsUntilGrowth;
+        }
+    }
 
     const std::string Plant::toString() const {
         if (iterationsUntilGrowth <= 0) {
