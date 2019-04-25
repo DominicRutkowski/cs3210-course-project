@@ -15,6 +15,11 @@ namespace cs3210 {
         }
     }
 
+    unsigned int Plant::consume() {
+        iterationsUntilGrowth = regrowthCoefficient;
+        return maxEnergy;
+    }
+
     const std::string Plant::toString() const {
         if (iterationsUntilGrowth <= 0) {
             return symbol;
