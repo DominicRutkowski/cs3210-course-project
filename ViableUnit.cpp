@@ -12,10 +12,6 @@ namespace cs3210 {
         }
     }
 
-    void ViableUnit::iterateAnimal() {
-        
-    }
-
     void ViableUnit::setPlant(std::unique_ptr<Plant> plant) {
         this->plant = std::move(plant);
     }

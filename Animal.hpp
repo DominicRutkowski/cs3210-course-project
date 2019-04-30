@@ -19,8 +19,11 @@ namespace cs3210 {
     protected:
         const AnimalType animalType;
         const std::vector<std::string> foodChain;
+        bool iterated;
     public:
         Animal(const std::string& symbol, const unsigned int maxEnergy, unsigned int energy, const AnimalType& animalType, const std::vector<std::string>& foodChain);
+        void setIterated(bool iterated = true);
+        bool hasIterated();
         const std::string toString() const override;
         const AnimalType getAnimalType() const;
     };

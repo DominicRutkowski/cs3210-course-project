@@ -18,6 +18,7 @@ namespace cs3210 {
 
     void Environment::iterate(unsigned int iterations) {
         for (int i = 0; i < iterations; ++i) {
+            // Iterate plants
             for (auto& row : grid) {
                 for (auto& unit : row) {
                     if (unit->getUnitType() == UnitType::VIABLE_UNIT) {
@@ -28,24 +29,50 @@ namespace cs3210 {
                     }
                 }
             }
-            for (auto& row : grid) {
-                for (auto& unit : row) {
-                    if (unit->getUnitType() == UnitType::VIABLE_UNIT) {
-                        auto& viableUnit = dynamic_cast<ViableUnit&>(*unit);
-                        if (viableUnit.getAnimal() != nullptr &&
-                            viableUnit.getAnimal()->getAnimalType() == AnimalType::HERBIVORE) {
-                            viableUnit.iterateAnimal();
+            // Iterate herbivores
+            for (int j = 0; j < grid.size(); ++j) {
+                for (int k = 0; k < grid[j].size(); ++k) {
+                    Unit& unit = *grid[j][k];
+                    if (unit.getUnitType() == UnitType::VIABLE_UNIT) {
+                        auto& viableUnit = dynamic_cast<ViableUnit&>(unit);
+                        auto& animal = viableUnit.getAnimal();
+                        if (animal != nullptr &&
+                            animal->getAnimalType() == AnimalType::HERBIVORE &&
+                            !animal->hasIterated()) {
+
+                            // Iteration process
+
+                            animal->setIterated();
                         }
                     }
                 }
             }
+            // Iterate omnivores
+            for (int j = 0; j < grid.size(); ++j) {
+                for (int k = 0; k < grid[j].size(); ++k) {
+                    Unit& unit = *grid[j][k];
+                    if (unit.getUnitType() == UnitType::VIABLE_UNIT) {
+                        auto& viableUnit = dynamic_cast<ViableUnit&>(unit);
+                        auto& animal = viableUnit.getAnimal();
+                        if (animal != nullptr &&
+                            animal->getAnimalType() == AnimalType::OMNIVORE &&
+                            !animal->hasIterated()) {
+
+                            // Iteration process
+
+                            animal->setIterated();
+                        }
+                    }
+                }
+            }
+            // Mark animals as ready to be iterated (movable) during the next iteration
             for (auto& row : grid) {
                 for (auto& unit : row) {
                     if (unit->getUnitType() == UnitType::VIABLE_UNIT) {
                         auto& viableUnit = dynamic_cast<ViableUnit&>(*unit);
-                        if (viableUnit.getAnimal() != nullptr &&
-                            viableUnit.getAnimal()->getAnimalType() == AnimalType::OMNIVORE) {
-                            viableUnit.iterateAnimal();
+                        auto& animal = viableUnit.getAnimal();
+                        if (animal != nullptr) {
+                            animal->setIterated(false);
                         }
                     }
                 }
