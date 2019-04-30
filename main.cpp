@@ -51,6 +51,7 @@ int main() {
     cs3210::Environment environment(mapLines, speciesLines);
     std::cout << "Initial environment:\n\n" << environment.toString() << std::endl;
 
+    bool saved = true;
     std::string rawInput;
     while (true) {
         std::cout << "Enter a command: ";
@@ -61,6 +62,19 @@ int main() {
 
         // Quit
         if (command == "quit" || command == "q" ||  command == "-1") {
+            if (!saved) {
+                std::cerr << "Would you like to save before quiting?" << std::endl;
+                std::string saveResponse;
+                getline(std::cin, saveResponse);
+                std::string saveCommand = toLowerCase(saveResponse.find(' ') == std::string::npos ? saveResponse.substr(0, saveResponse.find(' ')) : saveResponse);
+
+                if (saveCommand == "yes" || saveCommand == "y") {
+                    std::fstream saveMap("../input/map.txt");
+                    saveMap << environment.toString();
+                    saveMap.close();
+                    saved = true;
+                }
+            }
             break;
 
         // Save
@@ -68,26 +82,30 @@ int main() {
             std::fstream saveMap("../input/map.txt");
             saveMap << environment.toString();
             saveMap.close();
+            saved = true;
 
         // Save and quit
         } else if (command == "wq") {
             std::fstream saveMap("../input/map.txt");
             saveMap << environment.toString();
             saveMap.close();
+            saved = true;
             break;
 
         // Iterate n times
         } else if (isUnsignedInt(input)) {
             environment.iterate(std::stoi(input));
+            saved = false;
 
         // Iterate once
         } else if (input.empty()) {
             environment.iterate();
+            saved = false;
 
         // Invalid command, quit
         } else {
-            std::cerr << "Invalid command... quitting" << std::endl;
-            break;
+            std::cerr << "Invalid command" << std::endl;
+            continue;
         }
 
         std::cout << std::endl << environment.toString() << std::endl;
