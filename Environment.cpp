@@ -175,6 +175,13 @@ namespace cs3210 {
                         // on the part of the animals, but this
                         // quirkiness is good because it better
                         // simulates life in that it isn't perfect)
+
+                        // Overall, the movement algorithm isn't
+                        // very smart, but that is a relatively
+                        // accurate simulation of real life. If
+                        // the algorithm were smart 100% of the
+                        // time, animals could run away forever.
+
                         if (canMoveTo(*animal, getUnit(j + deltaY, k + deltaX))) {
                             std::shared_ptr<ViableUnit> destination = std::dynamic_pointer_cast<ViableUnit>(getUnit(j + deltaY, k + deltaX));
                             unsigned int plantEnergy = destination->plant != nullptr ? destination->plant->consume() : 0;
@@ -186,14 +193,91 @@ namespace cs3210 {
                             destination->animal->setMoved();
 
                             if (destination->animal->getEnergy() <= 0) {
-                                std::cout << "Animal death" << std::endl;
-                                destination->animal.reset(nullptr); // Animals with no energy die
+                                destination->animal.reset(nullptr);
                             }
                         }
                     }
                 }
             }
         }
+        for (int j = 0; j < grid.size(); ++j) {
+            for (int k = 0; k < grid[j].size(); ++k) {
+                if (getUnit(j, k)->getUnitType() == UnitType::VIABLE_UNIT) {
+                    std::shared_ptr<ViableUnit> viableUnit = std::dynamic_pointer_cast<ViableUnit>(getUnit(j, k));
+                    if (viableUnit->animal != nullptr &&
+                        viableUnit->animal->getAnimalType() == animalType &&
+                        !viableUnit->animal->hasReproduced()) {
+
+                        auto& animal = viableUnit->animal;
+
+                        // Initialize surrounding units
+                        std::shared_ptr<Unit> top = getUnit(j - 2, k);
+                        std::shared_ptr<Unit> topLeft = getUnit(j - 1, k - 1);
+                        std::shared_ptr<Unit> topCenter = getUnit(j - 1, k);
+                        std::shared_ptr<Unit> topRight = getUnit(j - 1, k + 1);
+                        std::shared_ptr<Unit> left = getUnit(j, k - 2);
+                        std::shared_ptr<Unit> leftCenter = getUnit(j, k - 1);
+                        std::shared_ptr<Unit> rightCenter = getUnit(j, k + 1);
+                        std::shared_ptr<Unit> right = getUnit(j, k + 2);
+                        std::shared_ptr<Unit> bottomLeft = getUnit(j + 1, k - 1);
+                        std::shared_ptr<Unit> bottomCenter = getUnit(j + 1, k);
+                        std::shared_ptr<Unit> bottomRight = getUnit(j + 1, k + 1);
+                        std::shared_ptr<Unit> bottom = getUnit(j + 2, k);
+
+                        std::vector<std::shared_ptr<Unit>> spawnLocations;
+                        if (canMateWith(*animal, topCenter)) {
+                            spawnLocations = {topLeft, top, topRight, rightCenter, bottomCenter, leftCenter};
+                            if (spawnChild(*animal, spawnLocations)) {
+                                std::shared_ptr<ViableUnit> mateUnit = std::dynamic_pointer_cast<ViableUnit>(topCenter);
+                                animal->setReproduced();
+                                mateUnit->animal->setReproduced();
+                            }
+                        } else if (canMateWith(*animal, rightCenter)) {
+                            spawnLocations = {topRight, right, bottomRight, bottomCenter, leftCenter, topCenter};
+                            if (spawnChild(*animal, spawnLocations)) {
+                                std::shared_ptr<ViableUnit> mateUnit = std::dynamic_pointer_cast<ViableUnit>(rightCenter);
+                                animal->setReproduced();
+                                mateUnit->animal->setReproduced();
+                            }
+                        } else if (canMateWith(*animal, bottomCenter)) {
+                            spawnLocations = {bottomRight, bottom, bottomLeft, leftCenter, topCenter, rightCenter};
+                            if (spawnChild(*animal, spawnLocations)) {
+                                std::shared_ptr<ViableUnit> mateUnit = std::dynamic_pointer_cast<ViableUnit>(bottomCenter);
+                                animal->setReproduced();
+                                mateUnit->animal->setReproduced();
+                            }
+                        } else if (canMateWith(*animal, leftCenter)) {
+                            spawnLocations = {bottomLeft, left, topLeft, topCenter, rightCenter, bottomCenter};
+                            if (spawnChild(*animal, spawnLocations)) {
+                                std::shared_ptr<ViableUnit> mateUnit = std::dynamic_pointer_cast<ViableUnit>(leftCenter);
+                                animal->setReproduced();
+                                mateUnit->animal->setReproduced();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    bool Environment::spawnChild(const Animal& animal, std::vector<std::shared_ptr<Unit>> spawnLocations) {
+        for (auto& spawnLocation : spawnLocations) {
+            if (spawnLocation->getUnitType() == UnitType::VIABLE_UNIT) {
+                std::shared_ptr<ViableUnit> viableLocation = std::dynamic_pointer_cast<ViableUnit>(spawnLocation);
+                if (viableLocation->plant == nullptr && viableLocation->animal == nullptr) {
+                    // Spawn offspring here
+                    viableLocation->animal = std::unique_ptr<Animal>(new Animal(animal.toString(), animal.getMaxEnergy(),
+                            animal.getMaxEnergy(), animal.getAnimalType(), animal.getFoodChain()));
+                    // Prevent an animal from moving or reproducing on the same turn it is born
+                    viableLocation->animal->setMoved();
+                    viableLocation->animal->setReproduced();
+
+                    std::cout << "Spawned child" << std::endl;
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     bool Environment::canMoveTo(const Animal& animal, const std::shared_ptr<Unit> unit) {
@@ -249,7 +333,9 @@ namespace cs3210 {
             if (viableUnit->animal == nullptr || viableUnit->animal->toString() != animal.toString()) {
                 return false;
             } else {
-                return animal.getEnergy() > 0.5 * animal.getMaxEnergy() && viableUnit->animal->getEnergy() > 0.5 * viableUnit->animal->getMaxEnergy();
+                return animal.getEnergy() > 0.5 * animal.getMaxEnergy() &&
+                    viableUnit->animal->getEnergy() > 0.5 * viableUnit->animal->getMaxEnergy() &&
+                    !animal.hasReproduced() && !viableUnit->animal->hasReproduced();
             }
         }
     }

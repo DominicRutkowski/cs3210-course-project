@@ -26,8 +26,8 @@ namespace cs3210 {
         const std::vector<std::string>& getFoodChain() const;
         void setMoved(bool moved = true);
         void setReproduced(bool reproduced = true);
-        bool hasMoved();
-        bool hasReproduced();
+        bool hasMoved() const;
+        bool hasReproduced() const;
         const std::string toString() const override;
         const AnimalType getAnimalType() const;
     };

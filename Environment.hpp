@@ -29,6 +29,8 @@ namespace cs3210 {
 
         void iterateAnimals(AnimalType animalType);
 
+        bool spawnChild(const Animal& animal, std::vector<std::shared_ptr<Unit>> spawnLocations);
+
         bool canMoveTo(const Animal& animal, const std::shared_ptr<Unit> unit);
         bool canConsume(const Animal& animal, const Plant& plant);
         bool canConsume(const Animal& animal, const Animal& prey);

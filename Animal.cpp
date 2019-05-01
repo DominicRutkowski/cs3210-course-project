@@ -23,11 +23,11 @@ namespace cs3210 {
         this->reproduced = reproduced;
     }
 
-    bool Animal::hasMoved() {
+    bool Animal::hasMoved() const {
         return moved;
     }
 
-    bool Animal::hasReproduced() {
+    bool Animal::hasReproduced() const {
         return reproduced;
     }
 
