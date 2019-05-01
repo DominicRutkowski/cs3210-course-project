@@ -33,6 +33,9 @@ namespace cs3210 {
         bool canConsume(const Animal& animal, const Animal& prey);
         bool isPredatorOf(const Animal& animal, const std::shared_ptr<Unit> unit);
 
+        int nextX(int x, int y);
+        int nextY(int x, int y);
+
         std::shared_ptr<Unit> parseUnit(char ch, const std::vector<std::string>& speciesLines) const;
         std::shared_ptr<Unit> getUnit(int x, int y);
     public:

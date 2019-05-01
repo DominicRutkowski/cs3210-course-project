@@ -38,7 +38,8 @@ namespace cs3210 {
                         auto& viableUnit = dynamic_cast<ViableUnit&>(*unit);
                         auto& animal = viableUnit.getAnimal();
                         if (animal != nullptr) {
-                            animal->setIterated(false);
+                            animal->setMoved(false);
+                            animal->setReproduced(false);
                         }
                     }
                 }
@@ -54,7 +55,7 @@ namespace cs3210 {
                     auto& animal = viableUnit->getAnimal();
                     if (animal != nullptr &&
                         animal->getAnimalType() == animalType &&
-                        !animal->hasIterated()) {
+                        !animal->hasMoved()) {
 
                         // Initialize surrounding units
                         std::shared_ptr<Unit> top = getUnit(j - 2, k);
@@ -97,7 +98,10 @@ namespace cs3210 {
                             deltaY = 0;
                         }
 
-                        animal->setIterated();
+                        if (canMoveTo(*animal, getUnit(j + deltaX, k + deltaY))) {
+                            // Move there
+                            animal->setMoved();
+                        } // Otherwise stay put
                     }
                 }
             }
