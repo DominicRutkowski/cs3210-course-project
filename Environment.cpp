@@ -191,19 +191,15 @@ namespace cs3210 {
         if (unit == nullptr || unit->getUnitType() == UnitType::OBSTACLE) {
             return false;
         } else {
-            std::cout << "not nullptr" << std::endl;
             std::shared_ptr<ViableUnit> viableUnit = std::dynamic_pointer_cast<ViableUnit>(unit);
+            std::cout << "Plant: " << (viableUnit->plant == nullptr) << " Animal: " << (viableUnit->animal == nullptr) << std::endl;
             if (viableUnit->plant == nullptr && viableUnit->animal == nullptr) {
-                std::cout << "both null" << std::endl;
                 return true;
             } else if (viableUnit->animal == nullptr) {
-                std::cout << "plant" << std::endl;
                 return canConsume(animal, *viableUnit->plant);
             } else if (viableUnit->plant == nullptr) {
-                std::cout << "animal" << std::endl;
                 return canConsume(animal, *viableUnit->animal);
             } else {
-                std::cout << "both" << std::endl;
                 return canConsume(animal, *viableUnit->plant) && canConsume(animal, *viableUnit->animal) && animal.getEnergy() < animal.getMaxEnergy() - 1;
             }
         }
