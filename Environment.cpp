@@ -32,36 +32,42 @@ namespace cs3210 {
             // Iterate herbivores
             for (int j = 0; j < grid.size(); ++j) {
                 for (int k = 0; k < grid[j].size(); ++k) {
-                    Unit& unit = *grid[j][k];
-                    if (unit.getUnitType() == UnitType::VIABLE_UNIT) {
-                        auto& viableUnit = dynamic_cast<ViableUnit&>(unit);
+                    try {
+                        auto& viableUnit = getViableUnit(j, k);
                         auto& animal = viableUnit.getAnimal();
                         if (animal != nullptr &&
                             animal->getAnimalType() == AnimalType::HERBIVORE &&
                             !animal->hasIterated()) {
 
                             // Iteration process
+                            std::cout << "Herbivore iterating." << std::endl;
 
                             animal->setIterated();
                         }
+                    } catch (const std::domain_error& exception) {
+                        // This is normal
+                        std::cout << "Normal exception" << std::endl;
                     }
                 }
             }
             // Iterate omnivores
             for (int j = 0; j < grid.size(); ++j) {
                 for (int k = 0; k < grid[j].size(); ++k) {
-                    Unit& unit = *grid[j][k];
-                    if (unit.getUnitType() == UnitType::VIABLE_UNIT) {
-                        auto& viableUnit = dynamic_cast<ViableUnit&>(unit);
+                    try {
+                        auto& viableUnit = getViableUnit(j, k);
                         auto& animal = viableUnit.getAnimal();
                         if (animal != nullptr &&
                             animal->getAnimalType() == AnimalType::OMNIVORE &&
                             !animal->hasIterated()) {
 
                             // Iteration process
+                            std::cout << "Omnivore iterating." << std::endl;
 
                             animal->setIterated();
                         }
+                    } catch (const std::domain_error& exception) {
+                        // This is normal
+                        std::cout << "Normal exception" << std::endl;
                     }
                 }
             }
@@ -128,6 +134,15 @@ namespace cs3210 {
             return std::unique_ptr<ViableUnit>(new ViableUnit());
         } else { // Obstacle
             return std::unique_ptr<Obstacle>(new Obstacle(std::string(1, ch)));
+        }
+    }
+
+    ViableUnit& Environment::getViableUnit(int x, int y) {
+        Unit& unit = *grid[x][y];
+        if (unit.getUnitType() == UnitType::VIABLE_UNIT) {
+            return dynamic_cast<ViableUnit&>(unit);
+        } else {
+            throw std::domain_error("The unit at that point isn't viable.");
         }
     }
 
