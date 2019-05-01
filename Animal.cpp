@@ -11,6 +11,10 @@ namespace cs3210 {
                    Organism(symbol, maxEnergy, energy), animalType{animalType}, foodChain{foodChain},
                    iterated{false} {}
 
+    const std::vector<std::string>& Animal::getFoodChain() {
+        return foodChain;
+    }
+
     void Animal::setIterated(bool iterated) {
         this->iterated = iterated;
     }

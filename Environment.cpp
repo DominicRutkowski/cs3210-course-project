@@ -70,9 +70,25 @@ namespace cs3210 {
                         std::shared_ptr<Unit> bottomRight = getUnit(j + 1, k + 1);
                         std::shared_ptr<Unit> bottom = getUnit(j + 2, k);
 
+                        
+
                         animal->setIterated();
                     }
                 }
+            }
+        }
+    }
+
+    bool Environment::isPredatorOf(const Animal& animal, const std::shared_ptr<Unit> unit) {
+        if (unit == nullptr || unit->getUnitType() == UnitType::OBSTACLE) {
+            return false;
+        } else {
+            std::shared_ptr<ViableUnit> viableUnit = std::dynamic_pointer_cast<ViableUnit>(unit);
+            if (viableUnit->getAnimal() == nullptr) {
+                return false;
+            } else {
+                std::vector<std::string> foodChain = viableUnit->getAnimal()->getFoodChain();
+                return std::find(foodChain.begin(), foodChain.end(), animal.toString()) != foodChain.end();
             }
         }
     }

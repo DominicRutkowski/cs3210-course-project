@@ -22,6 +22,7 @@ namespace cs3210 {
         bool iterated;
     public:
         Animal(const std::string& symbol, const unsigned int maxEnergy, unsigned int energy, const AnimalType& animalType, const std::vector<std::string>& foodChain);
+        const std::vector<std::string>& getFoodChain();
         void setIterated(bool iterated = true);
         bool hasIterated();
         const std::string toString() const override;

@@ -9,6 +9,7 @@
 #include "Unit.hpp"
 #include "ViableUnit.hpp"
 
+#include <algorithm>
 #include <exception>
 #include <iostream>
 #include <memory>
@@ -27,7 +28,7 @@ namespace cs3210 {
 
         void iterateAnimals(AnimalType animalType);
 
-        bool isPredatorOf();
+        bool isPredatorOf(const Animal& animal, const std::shared_ptr<Unit> unit);
 
         std::shared_ptr<Unit> parseUnit(char ch, const std::vector<std::string>& speciesLines) const;
         std::shared_ptr<Unit> getUnit(int x, int y);
