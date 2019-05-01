@@ -40,6 +40,24 @@ namespace cs3210 {
                             !animal->hasIterated()) {
 
                             // Begin herbivore iteration
+
+                            try {
+                                auto& top = grid[j - 2][k];
+                            } catch {
+
+                            }
+
+                            auto& topLeft = grid[j - 1][k - 1];
+                            auto& topCenter = grid[j - 1][k];
+                            auto& topRight = grid[j - 1][k + 1];
+                            auto& left = grid[j][k - 2];
+                            auto& leftCenter = grid[j][k - 1];
+                            auto& rightCenter = grid[j][k + 1];
+                            auto& right = grid[j][k + 2];
+                            auto& bottomLeft = grid[j + 1][k - 1];
+                            auto& bottomCenter = grid[j + 1][k];
+                            auto& bottomRight = grid[j + 1][k + 1];
+                            auto& bottom = grid[j + 2][k];
                             // End herbivore iteration
 
                             animal->setIterated();
