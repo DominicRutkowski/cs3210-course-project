@@ -51,10 +51,11 @@ namespace cs3210 {
             for (int k = 0; k < grid[j].size(); ++k) {
                 if (getUnit(j, k)->getUnitType() == UnitType::VIABLE_UNIT) {
                     std::shared_ptr<ViableUnit> viableUnit = std::dynamic_pointer_cast<ViableUnit>(getUnit(j, k));
-                    auto& animal = viableUnit->animal;
-                    if (animal != nullptr &&
-                        animal->getAnimalType() == animalType &&
-                        !animal->hasMoved()) {
+                    if (viableUnit->animal != nullptr &&
+                        viableUnit->animal->getAnimalType() == animalType &&
+                        !viableUnit->animal->hasMoved()) {
+
+                        auto& animal = viableUnit->animal;
 
                         // Initialize surrounding units
                         std::shared_ptr<Unit> top = getUnit(j - 2, k);
@@ -142,6 +143,17 @@ namespace cs3210 {
                                     } else if (leftEnergy == maxEnergy) {
                                         deltaX = -1;
                                     }
+                                } else {
+                                    double random = rand();
+                                    if (random < 0.25) {
+                                        deltaY = -1;
+                                    } else if (random < 0.5) {
+                                        deltaX = 1;
+                                    } else if (random < 0.75) {
+                                        deltaY = 1;
+                                    } else {
+                                        deltaX = -1;
+                                    }
                                 }
                             } else {
                                 double random = rand();
@@ -171,8 +183,6 @@ namespace cs3210 {
 
                             // Move there
                             destination->animal = std::move(viableUnit->animal);
-                            viableUnit->animal.reset(nullptr);
-
                             destination->animal->setMoved();
 
                             if (destination->animal->getEnergy() <= 0) {
@@ -187,12 +197,11 @@ namespace cs3210 {
     }
 
     bool Environment::canMoveTo(const Animal& animal, const std::shared_ptr<Unit> unit) {
-        std::cout << "canMoveTo()" << std::endl;
         if (unit == nullptr || unit->getUnitType() == UnitType::OBSTACLE) {
             return false;
         } else {
             std::shared_ptr<ViableUnit> viableUnit = std::dynamic_pointer_cast<ViableUnit>(unit);
-            std::cout << "Plant: " << (viableUnit->plant == nullptr) << " Animal: " << (viableUnit->animal == nullptr) << std::endl;
+
             if (viableUnit->plant == nullptr && viableUnit->animal == nullptr) {
                 return true;
             } else if (viableUnit->animal == nullptr) {
