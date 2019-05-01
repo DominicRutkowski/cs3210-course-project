@@ -77,28 +77,58 @@ namespace cs3210 {
                         bool leftPredator = isPredatorOf(*animal, left) || isPredatorOf(*animal, leftCenter) || isPredatorOf(*animal, bottomLeft);
 
                         int deltaX = 0;
-                        if (rightPredator == leftPredator) {
-                            deltaX = 0;
-                        } else if (rightPredator) {
-                            deltaX = -1;
-                        } else if (leftPredator) {
-                            deltaX = 1;
-                        }
-
                         int deltaY = 0;
-                        if (topPredator == bottomPredator) {
-                            deltaY = 0;
-                        } else if (topPredator) {
-                            deltaY = 1;
-                        } else if (bottomPredator) {
-                            deltaY = -1;
+                        if (topPredator || rightPredator || bottomPredator || leftPredator) {
+                            if (rightPredator == leftPredator) {
+                                deltaX = 0;
+                            } else if (rightPredator) {
+                                deltaX = -1;
+                            } else if (leftPredator) {
+                                deltaX = 1;
+                            }
+
+                            if (topPredator == bottomPredator) {
+                                deltaY = 0;
+                            } else if (topPredator) {
+                                deltaY = 1;
+                            } else if (bottomPredator) {
+                                deltaY = -1;
+                            }
+
+                            if (deltaX != 0 && deltaY != 0) {
+                                deltaY = 0;
+                            }
+                        } else {
+                            unsigned int topMates = canMateWith(*animal, top) + canMateWith(*animal, topLeft) + canMateWith(*animal, topCenter);
+                            unsigned int rightMates = canMateWith(*animal, topRight) + canMateWith(*animal, rightCenter) + canMateWith(*animal, right);
+                            unsigned int bottomMates = canMateWith(*animal, bottomCenter) + canMateWith(*animal, bottomRight) + canMateWith(*animal, bottom);
+                            unsigned int leftMates = canMateWith(*animal, left) + canMateWith(*animal, leftCenter) + canMateWith(*animal, bottomLeft);
+
+                            unsigned int maxMates = std::max(std::max(topMates, bottomMates), std::max(rightMates, leftMates));
+                            if (maxMates > 0) {
+                                std::cout << "Mate move " << j << ", " << k << ": ";
+                                if (topMates == maxMates) {
+                                    deltaY = -1;
+                                } else if (rightMates == maxMates) {
+                                    deltaX = 1;
+                                } else if (bottomMates == maxMates) {
+                                    deltaY = 1;
+                                } else if (leftMates == maxMates) {
+                                    deltaX = -1;
+                                }
+                                std::cout << j + deltaX << ", " << k + deltaY << std::endl;
+                            } else {
+
+                            }
                         }
 
-                        if (deltaX != 0 && deltaY != 0) {
-                            deltaY = 0;
-                        }
-
-                        if (canMoveTo(*animal, getUnit(j + deltaX, k + deltaY))) {
+                        // Try to move to the desired ViableUnit
+                        // Otherwise stay put
+                        // (this leads to some irrational behavior
+                        // on the part of the animals, but this
+                        // quirkiness is good because it better
+                        // simulates life in that it isn't perfect)
+                        if (canMoveTo(*animal, getUnit(j + deltaY, k + deltaX))) {
                             std::shared_ptr<ViableUnit> destination = std::dynamic_pointer_cast<ViableUnit>(getUnit(j + deltaX, k + deltaY));
                             unsigned int plantEnergy = destination->getPlant() != nullptr ? destination->getPlant()->consume() : 0;
                             unsigned int animalEnergy = destination->getAnimal() != nullptr ? destination->getAnimal()->getEnergy() : 0;
@@ -108,12 +138,12 @@ namespace cs3210 {
                             destination->animal = std::move(viableUnit->animal);
 
                             destination->animal->setMoved();
-                            
+
                             destination->animal->setEnergy(destination->animal->getEnergy() - 1);
                             if (destination->animal->getEnergy() <= 0) {
                                 destination->animal.reset(); // Animals with no energy die
                             }
-                        } // Otherwise stay put
+                        }
                     }
                 }
             }
@@ -160,6 +190,19 @@ namespace cs3210 {
             } else {
                 std::vector<std::string> foodChain = viableUnit->getAnimal()->getFoodChain();
                 return std::find(foodChain.begin(), foodChain.end(), animal.toString()) != foodChain.end();
+            }
+        }
+    }
+
+    bool Environment::canMateWith(const Animal& animal, const std::shared_ptr<Unit> unit) {
+        if (unit == nullptr || unit->getUnitType() == UnitType::OBSTACLE) {
+            return false;
+        } else {
+            std::shared_ptr<ViableUnit> viableUnit = std::dynamic_pointer_cast<ViableUnit>(unit);
+            if (viableUnit->getAnimal() == nullptr || viableUnit->getAnimal()->toString() != animal.toString()) {
+                return false;
+            } else {
+                return animal.getEnergy() > 0.5 * animal.getMaxEnergy() && viableUnit->getAnimal()->getEnergy() > 0.5 * viableUnit->getAnimal()->getMaxEnergy();
             }
         }
     }
