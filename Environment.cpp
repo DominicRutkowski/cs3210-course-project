@@ -7,9 +7,9 @@
 namespace cs3210 {
 
     Environment::Environment(const std::vector<std::string>& mapLines, const std::vector<std::string>& speciesLines):
-    grid{std::vector<std::vector<std::unique_ptr<Unit>>>(mapLines.size())} {
+    grid{std::vector<std::vector<std::shared_ptr<Unit>>>(mapLines.size())} {
         for (int i = 0; i < mapLines.size(); ++i) {
-            grid[i] = std::vector<std::unique_ptr<Unit>>(mapLines[i].size());
+            grid[i] = std::vector<std::shared_ptr<Unit>>(mapLines[i].size());
             for (int j = 0; j < mapLines[i].size(); ++j) {
                 grid[i][j] = std::move(parseUnit(mapLines[i][j], speciesLines));
             }
@@ -29,60 +29,8 @@ namespace cs3210 {
                     }
                 }
             }
-            // Iterate herbivores
-            for (int j = 0; j < grid.size(); ++j) {
-                for (int k = 0; k < grid[j].size(); ++k) {
-                    try {
-                        auto& viableUnit = getViableUnit(j, k);
-                        auto& animal = viableUnit.getAnimal();
-                        if (animal != nullptr &&
-                            animal->getAnimalType() == AnimalType::HERBIVORE &&
-                            !animal->hasIterated()) {
-
-                            // Begin herbivore iteration
-
-                            try {
-                                auto& top = grid[j - 2][k];
-                            } catch {
-
-                            }
-
-                            auto& topLeft = grid[j - 1][k - 1];
-                            auto& topCenter = grid[j - 1][k];
-                            auto& topRight = grid[j - 1][k + 1];
-                            auto& left = grid[j][k - 2];
-                            auto& leftCenter = grid[j][k - 1];
-                            auto& rightCenter = grid[j][k + 1];
-                            auto& right = grid[j][k + 2];
-                            auto& bottomLeft = grid[j + 1][k - 1];
-                            auto& bottomCenter = grid[j + 1][k];
-                            auto& bottomRight = grid[j + 1][k + 1];
-                            auto& bottom = grid[j + 2][k];
-                            // End herbivore iteration
-
-                            animal->setIterated();
-                        }
-                    } catch (const std::domain_error& exception) {}
-                }
-            }
-            // Iterate omnivores
-            for (int j = 0; j < grid.size(); ++j) {
-                for (int k = 0; k < grid[j].size(); ++k) {
-                    try {
-                        auto& viableUnit = getViableUnit(j, k);
-                        auto& animal = viableUnit.getAnimal();
-                        if (animal != nullptr &&
-                            animal->getAnimalType() == AnimalType::OMNIVORE &&
-                            !animal->hasIterated()) {
-
-                            // Begin omnivore iteration
-                            // End omnivore iteration
-
-                            animal->setIterated();
-                        }
-                    } catch (const std::domain_error& exception) {}
-                }
-            }
+            iterateAnimals(AnimalType::HERBIVORE);
+            iterateAnimals(AnimalType::OMNIVORE);
             // Mark animals as ready to be iterated (movable) during the next iteration
             for (auto& row : grid) {
                 for (auto& unit : row) {
@@ -92,6 +40,37 @@ namespace cs3210 {
                         if (animal != nullptr) {
                             animal->setIterated(false);
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    void Environment::iterateAnimals(AnimalType animalType) {
+        for (int j = 0; j < grid.size(); ++j) {
+            for (int k = 0; k < grid[j].size(); ++k) {
+                if (getUnit(j, k)->getUnitType() == UnitType::VIABLE_UNIT) {
+                    std::shared_ptr<ViableUnit> viableUnit = std::dynamic_pointer_cast<ViableUnit>(getUnit(j, k));
+                    auto& animal = viableUnit->getAnimal();
+                    if (animal != nullptr &&
+                        animal->getAnimalType() == animalType &&
+                        !animal->hasIterated()) {
+
+                        // Initialize surrounding units
+                        std::shared_ptr<Unit> top = getUnit(j - 2, k);
+                        std::shared_ptr<Unit> topLeft = getUnit(j - 1, k - 1);
+                        std::shared_ptr<Unit> topCenter = getUnit(j - 1, k);
+                        std::shared_ptr<Unit> topRight = getUnit(j - 1, k + 1);
+                        std::shared_ptr<Unit> left = getUnit(j, k - 2);
+                        std::shared_ptr<Unit> leftCenter = getUnit(j, k - 1);
+                        std::shared_ptr<Unit> rightCenter = getUnit(j, k + 1);
+                        std::shared_ptr<Unit> right = getUnit(j, k + 2);
+                        std::shared_ptr<Unit> bottomLeft = getUnit(j + 1, k - 1);
+                        std::shared_ptr<Unit> bottomCenter = getUnit(j + 1, k);
+                        std::shared_ptr<Unit> bottomRight = getUnit(j + 1, k + 1);
+                        std::shared_ptr<Unit> bottom = getUnit(j + 2, k);
+
+                        animal->setIterated();
                     }
                 }
             }
@@ -111,7 +90,7 @@ namespace cs3210 {
         return result;
     }
 
-    std::unique_ptr<Unit> Environment::parseUnit(char ch, const std::vector<std::string>& speciesLines) const {
+    std::shared_ptr<Unit> Environment::parseUnit(char ch, const std::vector<std::string>& speciesLines) const {
         for (auto& speciesDefinition : speciesLines) {
             unsigned int typeCharIndex = speciesDefinition.find(' ') + 1;
             char typeChar = speciesDefinition.at(typeCharIndex);
@@ -143,18 +122,17 @@ namespace cs3210 {
             }
         }
         if (ch == ' ') { // Empty space
-            return std::unique_ptr<ViableUnit>(new ViableUnit());
+            return std::shared_ptr<ViableUnit>(new ViableUnit());
         } else { // Obstacle
-            return std::unique_ptr<Obstacle>(new Obstacle(std::string(1, ch)));
+            return std::shared_ptr<Obstacle>(new Obstacle(std::string(1, ch)));
         }
     }
 
-    ViableUnit& Environment::getViableUnit(int x, int y) {
-        Unit& unit = *grid[x][y];
-        if (unit.getUnitType() == UnitType::VIABLE_UNIT) {
-            return dynamic_cast<ViableUnit&>(unit);
-        } else {
-            throw std::domain_error("The unit at that point isn't viable.");
+    std::shared_ptr<Unit> Environment::getUnit(int x, int y) {
+        try {
+            return grid.at(x).at(y);
+        } catch (const std::out_of_range& exception) {
+            return nullptr;
         }
     }
 

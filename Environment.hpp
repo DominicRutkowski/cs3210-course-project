@@ -23,10 +23,14 @@ namespace cs3210 {
 
     class Environment {
     private:
-        Grid<std::unique_ptr<Unit>> grid;
-        std::unique_ptr<Unit> parseUnit(char ch, const std::vector<std::string>& speciesLines) const;
-        std::unique_ptr<Unit>& getUnit(int x, int y);
-        ViableUnit& getViableUnit(int x, int y);
+        Grid<std::shared_ptr<Unit>> grid;
+
+        void iterateAnimals(AnimalType animalType);
+
+        bool isPredatorOf();
+
+        std::shared_ptr<Unit> parseUnit(char ch, const std::vector<std::string>& speciesLines) const;
+        std::shared_ptr<Unit> getUnit(int x, int y);
     public:
         Environment(const std::vector<std::string>& mapLines, const std::vector<std::string>& speciesLines);
 
