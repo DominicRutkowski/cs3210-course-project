@@ -19,12 +19,12 @@ namespace cs3210 {
     void Environment::iterate(unsigned int iterations) {
         for (int i = 0; i < iterations; ++i) {
             // Iterate plants
-            for (auto& row : grid) {
-                for (auto& unit : row) {
-                    if (unit->getUnitType() == UnitType::VIABLE_UNIT) {
-                        auto& viableUnit = dynamic_cast<ViableUnit&>(*unit);
-                        if (viableUnit.getPlant() != nullptr) {
-                            viableUnit.iteratePlant();
+            for (int j = 0; j < grid.size(); ++j) {
+                for (int k = 0; k < grid[j].size(); ++k) {
+                    if (getUnit(j, k)->getUnitType() == UnitType::VIABLE_UNIT) {
+                        std::shared_ptr<ViableUnit> viableUnit = std::dynamic_pointer_cast<ViableUnit>(getUnit(j, k));
+                        if (viableUnit->plant != nullptr) {
+                            viableUnit->iteratePlant();
                         }
                     }
                 }
@@ -32,14 +32,13 @@ namespace cs3210 {
             iterateAnimals(AnimalType::HERBIVORE);
             iterateAnimals(AnimalType::OMNIVORE);
             // Mark animals as ready to be iterated (movable) during the next iteration
-            for (auto& row : grid) {
-                for (auto& unit : row) {
-                    if (unit->getUnitType() == UnitType::VIABLE_UNIT) {
-                        auto& viableUnit = dynamic_cast<ViableUnit&>(*unit);
-                        auto& animal = viableUnit.getAnimal();
-                        if (animal != nullptr) {
-                            animal->setMoved(false);
-                            animal->setReproduced(false);
+            for (int j = 0; j < grid.size(); ++j) {
+                for (int k = 0; k < grid[j].size(); ++k) {
+                    if (getUnit(j, k)->getUnitType() == UnitType::VIABLE_UNIT) {
+                        std::shared_ptr<ViableUnit> viableUnit = std::dynamic_pointer_cast<ViableUnit>(getUnit(j, k));
+                        if (viableUnit->animal != nullptr) {
+                            viableUnit->animal->setMoved(false);
+                            viableUnit->animal->setReproduced(false);
                         }
                     }
                 }
@@ -52,7 +51,7 @@ namespace cs3210 {
             for (int k = 0; k < grid[j].size(); ++k) {
                 if (getUnit(j, k)->getUnitType() == UnitType::VIABLE_UNIT) {
                     std::shared_ptr<ViableUnit> viableUnit = std::dynamic_pointer_cast<ViableUnit>(getUnit(j, k));
-                    auto& animal = viableUnit->getAnimal();
+                    auto& animal = viableUnit->animal;
                     if (animal != nullptr &&
                         animal->getAnimalType() == animalType &&
                         !animal->hasMoved()) {
@@ -166,18 +165,19 @@ namespace cs3210 {
                         // simulates life in that it isn't perfect)
                         if (canMoveTo(*animal, getUnit(j + deltaY, k + deltaX))) {
                             std::shared_ptr<ViableUnit> destination = std::dynamic_pointer_cast<ViableUnit>(getUnit(j + deltaY, k + deltaX));
-                            unsigned int plantEnergy = destination->getPlant() != nullptr ? destination->getPlant()->consume() : 0;
-                            unsigned int animalEnergy = destination->getAnimal() != nullptr ? destination->getAnimal()->getEnergy() : 0;
-                            animal->setEnergy(animal->getEnergy() + plantEnergy + animalEnergy);
+                            unsigned int plantEnergy = destination->plant != nullptr ? destination->plant->consume() : 0;
+                            unsigned int animalEnergy = destination->animal != nullptr ? destination->animal->getEnergy() : 0;
+                            animal->setEnergy(animal->getEnergy() + plantEnergy + animalEnergy - 1);
 
                             // Move there
                             destination->animal = std::move(viableUnit->animal);
+                            viableUnit->animal.reset(nullptr);
 
                             destination->animal->setMoved();
 
-                            destination->animal->setEnergy(destination->animal->getEnergy() - 1);
                             if (destination->animal->getEnergy() <= 0) {
-                                destination->animal.reset(); // Animals with no energy die
+                                std::cout << "Animal death" << std::endl;
+                                destination->animal.reset(nullptr); // Animals with no energy die
                             }
                         }
                     }
@@ -186,19 +186,25 @@ namespace cs3210 {
         }
     }
 
-    bool Environment::canMoveTo(const Animal& animal, const std::shared_ptr<Unit> unit) {\
+    bool Environment::canMoveTo(const Animal& animal, const std::shared_ptr<Unit> unit) {
+        std::cout << "canMoveTo()" << std::endl;
         if (unit == nullptr || unit->getUnitType() == UnitType::OBSTACLE) {
             return false;
         } else {
+            std::cout << "not nullptr" << std::endl;
             std::shared_ptr<ViableUnit> viableUnit = std::dynamic_pointer_cast<ViableUnit>(unit);
-            if (viableUnit->getPlant() == nullptr && viableUnit->getAnimal() == nullptr) {
+            if (viableUnit->plant == nullptr && viableUnit->animal == nullptr) {
+                std::cout << "both null" << std::endl;
                 return true;
-            } else if (viableUnit->getAnimal() == nullptr) {
-                return canConsume(animal, *viableUnit->getPlant());
-            } else if (viableUnit->getPlant() == nullptr) {
-                return canConsume(animal, *viableUnit->getAnimal());
+            } else if (viableUnit->animal == nullptr) {
+                std::cout << "plant" << std::endl;
+                return canConsume(animal, *viableUnit->plant);
+            } else if (viableUnit->plant == nullptr) {
+                std::cout << "animal" << std::endl;
+                return canConsume(animal, *viableUnit->animal);
             } else {
-                return canConsume(animal, *viableUnit->getPlant()) && canConsume(animal, *viableUnit->getAnimal()) && animal.getEnergy() < animal.getMaxEnergy() - 1;
+                std::cout << "both" << std::endl;
+                return canConsume(animal, *viableUnit->plant) && canConsume(animal, *viableUnit->animal) && animal.getEnergy() < animal.getMaxEnergy() - 1;
             }
         }
     }
@@ -221,10 +227,10 @@ namespace cs3210 {
             return false;
         } else {
             std::shared_ptr<ViableUnit> viableUnit = std::dynamic_pointer_cast<ViableUnit>(unit);
-            if (viableUnit->getAnimal() == nullptr) {
+            if (viableUnit->animal == nullptr) {
                 return false;
             } else {
-                std::vector<std::string> foodChain = viableUnit->getAnimal()->getFoodChain();
+                std::vector<std::string> foodChain = viableUnit->animal->getFoodChain();
                 return std::find(foodChain.begin(), foodChain.end(), animal.toString()) != foodChain.end();
             }
         }
@@ -235,10 +241,10 @@ namespace cs3210 {
             return false;
         } else {
             std::shared_ptr<ViableUnit> viableUnit = std::dynamic_pointer_cast<ViableUnit>(unit);
-            if (viableUnit->getAnimal() == nullptr || viableUnit->getAnimal()->toString() != animal.toString()) {
+            if (viableUnit->animal == nullptr || viableUnit->animal->toString() != animal.toString()) {
                 return false;
             } else {
-                return animal.getEnergy() > 0.5 * animal.getMaxEnergy() && viableUnit->getAnimal()->getEnergy() > 0.5 * viableUnit->getAnimal()->getMaxEnergy();
+                return animal.getEnergy() > 0.5 * animal.getMaxEnergy() && viableUnit->animal->getEnergy() > 0.5 * viableUnit->animal->getMaxEnergy();
             }
         }
     }
@@ -250,11 +256,11 @@ namespace cs3210 {
             std::shared_ptr<ViableUnit> viableUnit = std::dynamic_pointer_cast<ViableUnit>(unit);
             unsigned int plantEnergy = 0;
             unsigned int animalEnergy = 0;
-            if (viableUnit->getPlant() != nullptr && canConsume(animal, *viableUnit->getPlant())) {
-                plantEnergy = viableUnit->getPlant()->getEnergy();
+            if (viableUnit->plant != nullptr && canConsume(animal, *viableUnit->plant)) {
+                plantEnergy = viableUnit->plant->getEnergy();
             }
-            if (viableUnit->getAnimal() != nullptr && canConsume(animal, *viableUnit->getAnimal())) {
-                animalEnergy = viableUnit->getAnimal()->getEnergy();
+            if (viableUnit->animal != nullptr && canConsume(animal, *viableUnit->animal)) {
+                animalEnergy = viableUnit->animal->getEnergy();
             }
             return plantEnergy + animalEnergy;
         }
@@ -286,7 +292,7 @@ namespace cs3210 {
                     unsigned int regrowthCoefficient = std::stoi(speciesDefinition.substr(8, div - 8));
                     unsigned int energy = std::stoi(speciesDefinition.substr(div + 1));
 
-                    unit->setPlant(std::unique_ptr<Plant>(new Plant(std::string(1, ch), energy, regrowthCoefficient)));
+                    unit->plant = std::unique_ptr<Plant>(new Plant(std::string(1, ch), energy, regrowthCoefficient));
                 } else {
                     unsigned int energy = std::stoi(speciesDefinition.substr(speciesDefinition.find(']') + 2));
 
@@ -299,7 +305,7 @@ namespace cs3210 {
                     }
 
                     AnimalType animalType = organismClassification == "herbivore" ? AnimalType::HERBIVORE : AnimalType::OMNIVORE;
-                    unit->setAnimal(std::unique_ptr<Animal>(new Animal(std::string(1, ch), energy, energy, animalType, foodChain)));
+                    unit->animal = std::unique_ptr<Animal>(new Animal(std::string(1, ch), energy, energy, animalType, foodChain));
                 }
                 return unit;
             }
