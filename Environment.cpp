@@ -106,7 +106,6 @@ namespace cs3210 {
 
                             unsigned int maxMates = std::max(std::max(topMates, bottomMates), std::max(rightMates, leftMates));
                             if (maxMates > 0) {
-                                std::cout << "Mate move " << j << ", " << k << ": ";
                                 if (topMates == maxMates) {
                                     deltaY = -1;
                                 } else if (rightMates == maxMates) {
@@ -116,9 +115,46 @@ namespace cs3210 {
                                 } else if (leftMates == maxMates) {
                                     deltaX = -1;
                                 }
-                                std::cout << j + deltaX << ", " << k + deltaY << std::endl;
-                            } else {
+                            } else if (animal->getEnergy() < animal->getMaxEnergy()) {
+                                unsigned int topEnergy = 0;
+                                unsigned int rightEnergy = 0;
+                                unsigned int bottomEnergy = 0;
+                                unsigned int leftEnergy = 0;
+                                if (animal->getEnergy() >= 2) {
+                                    topEnergy = availableEnergy(*animal, top) + availableEnergy(*animal, topLeft) + availableEnergy(*animal, topCenter);
+                                    rightEnergy = availableEnergy(*animal, topRight) + availableEnergy(*animal, rightCenter) + availableEnergy(*animal, right);
+                                    bottomEnergy = availableEnergy(*animal, bottomCenter) + availableEnergy(*animal, bottomRight) + availableEnergy(*animal, bottom);
+                                    leftEnergy = availableEnergy(*animal, left) + availableEnergy(*animal, leftCenter) + availableEnergy(*animal, bottomLeft);
+                                } else if (animal->getEnergy() < 3) {
+                                    topEnergy = availableEnergy(*animal, topCenter);
+                                    rightEnergy = availableEnergy(*animal, rightCenter);
+                                    bottomEnergy = availableEnergy(*animal, bottomCenter);
+                                    leftEnergy = availableEnergy(*animal, leftCenter);
+                                }
 
+                                unsigned int maxEnergy = std::max(std::max(topEnergy, bottomEnergy), std::max(rightEnergy, leftEnergy));
+                                if (maxEnergy > 0) {
+                                    if (topEnergy == maxEnergy) {
+                                        deltaY = -1;
+                                    } else if (rightEnergy == maxEnergy) {
+                                        deltaX = 1;
+                                    } else if (bottomEnergy == maxEnergy) {
+                                        deltaY = 1;
+                                    } else if (leftEnergy == maxEnergy) {
+                                        deltaX = -1;
+                                    }
+                                }
+                            } else {
+                                double random = rand();
+                                if (random < 0.25) {
+                                    deltaY = -1;
+                                } else if (random < 0.5) {
+                                    deltaX = 1;
+                                } else if (random < 0.75) {
+                                    deltaY = 1;
+                                } else {
+                                    deltaX = -1;
+                                }
                             }
                         }
 
@@ -204,6 +240,23 @@ namespace cs3210 {
             } else {
                 return animal.getEnergy() > 0.5 * animal.getMaxEnergy() && viableUnit->getAnimal()->getEnergy() > 0.5 * viableUnit->getAnimal()->getMaxEnergy();
             }
+        }
+    }
+
+    unsigned int Environment::availableEnergy(const Animal& animal, const std::shared_ptr<Unit> unit) {
+        if (unit == nullptr || unit->getUnitType() == UnitType::OBSTACLE) {
+            return false;
+        } else {
+            std::shared_ptr<ViableUnit> viableUnit = std::dynamic_pointer_cast<ViableUnit>(unit);
+            unsigned int plantEnergy = 0;
+            unsigned int animalEnergy = 0;
+            if (viableUnit->getPlant() != nullptr && canConsume(animal, *viableUnit->getPlant())) {
+                plantEnergy = viableUnit->getPlant()->getEnergy();
+            }
+            if (viableUnit->getAnimal() != nullptr && canConsume(animal, *viableUnit->getAnimal())) {
+                animalEnergy = viableUnit->getAnimal()->getEnergy();
+            }
+            return plantEnergy + animalEnergy;
         }
     }
 

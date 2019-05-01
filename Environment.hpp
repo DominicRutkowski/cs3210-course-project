@@ -10,6 +10,7 @@
 #include "ViableUnit.hpp"
 
 #include <algorithm>
+#include <cstdlib>
 #include <exception>
 #include <iostream>
 #include <memory>
@@ -33,6 +34,7 @@ namespace cs3210 {
         bool canConsume(const Animal& animal, const Animal& prey);
         bool isPredatorOf(const Animal& animal, const std::shared_ptr<Unit> unit);
         bool canMateWith(const Animal& animal, const std::shared_ptr<Unit> unit);
+        unsigned int availableEnergy(const Animal& animal, const std::shared_ptr<Unit> unit);
 
         int nextX(int x, int y);
         int nextY(int x, int y);
