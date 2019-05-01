@@ -70,7 +70,28 @@ namespace cs3210 {
                         std::shared_ptr<Unit> bottomRight = getUnit(j + 1, k + 1);
                         std::shared_ptr<Unit> bottom = getUnit(j + 2, k);
 
-                        
+                        bool topPredator = isPredatorOf(*animal, top) || isPredatorOf(*animal, topLeft) || isPredatorOf(*animal, topCenter);
+                        bool rightPredator = isPredatorOf(*animal, topRight) || isPredatorOf(*animal, rightCenter) || isPredatorOf(*animal, right);
+                        bool bottomPredator = isPredatorOf(*animal, bottomCenter) || isPredatorOf(*animal, bottomRight) || isPredatorOf(*animal, bottom);
+                        bool leftPredator = isPredatorOf(*animal, left) || isPredatorOf(*animal, leftCenter) || isPredatorOf(*animal, bottomLeft);
+
+                        int deltaX;
+                        if (rightPredator == leftPredator) {
+                            deltaX = 0;
+                        } else if (rightPredator) {
+                            deltaX = -1;
+                        } else if (leftPredator) {
+                            deltaX = 1;
+                        }
+
+                        int deltaY;
+                        if (topPredator == bottomPredator) {
+                            deltaY = 0;
+                        } else if (topPredator) {
+                            deltaY = 1;
+                        } else if (bottomPredator) {
+                            deltaY = -1;
+                        }
 
                         animal->setIterated();
                     }
