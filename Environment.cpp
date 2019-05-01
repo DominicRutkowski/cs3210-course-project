@@ -129,7 +129,7 @@ namespace cs3210 {
                         // quirkiness is good because it better
                         // simulates life in that it isn't perfect)
                         if (canMoveTo(*animal, getUnit(j + deltaY, k + deltaX))) {
-                            std::shared_ptr<ViableUnit> destination = std::dynamic_pointer_cast<ViableUnit>(getUnit(j + deltaX, k + deltaY));
+                            std::shared_ptr<ViableUnit> destination = std::dynamic_pointer_cast<ViableUnit>(getUnit(j + deltaY, k + deltaX));
                             unsigned int plantEnergy = destination->getPlant() != nullptr ? destination->getPlant()->consume() : 0;
                             unsigned int animalEnergy = destination->getAnimal() != nullptr ? destination->getAnimal()->getEnergy() : 0;
                             animal->setEnergy(animal->getEnergy() + plantEnergy + animalEnergy);
