@@ -39,15 +39,12 @@ namespace cs3210 {
                             animal->getAnimalType() == AnimalType::HERBIVORE &&
                             !animal->hasIterated()) {
 
-                            // Iteration process
-                            std::cout << "Herbivore iterating." << std::endl;
+                            // Begin herbivore iteration
+                            // End herbivore iteration
 
                             animal->setIterated();
                         }
-                    } catch (const std::domain_error& exception) {
-                        // This is normal
-                        std::cout << "Normal exception" << std::endl;
-                    }
+                    } catch (const std::domain_error& exception) {}
                 }
             }
             // Iterate omnivores
@@ -60,15 +57,12 @@ namespace cs3210 {
                             animal->getAnimalType() == AnimalType::OMNIVORE &&
                             !animal->hasIterated()) {
 
-                            // Iteration process
-                            std::cout << "Omnivore iterating." << std::endl;
+                            // Begin omnivore iteration
+                            // End omnivore iteration
 
                             animal->setIterated();
                         }
-                    } catch (const std::domain_error& exception) {
-                        // This is normal
-                        std::cout << "Normal exception" << std::endl;
-                    }
+                    } catch (const std::domain_error& exception) {}
                 }
             }
             // Mark animals as ready to be iterated (movable) during the next iteration
