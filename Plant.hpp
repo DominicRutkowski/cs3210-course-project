@@ -17,6 +17,7 @@ namespace cs3210 {
         Plant(const std::string& symbol, const unsigned int maxEnergy, const unsigned int regrowthCoefficient);
         void iterate();
         unsigned int consume();
+        const unsigned int getIterationsUntilGrowth() const;
         const std::string toString() const override;
     };
 

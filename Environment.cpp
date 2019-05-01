@@ -75,7 +75,7 @@ namespace cs3210 {
                         bool bottomPredator = isPredatorOf(*animal, bottomCenter) || isPredatorOf(*animal, bottomRight) || isPredatorOf(*animal, bottom);
                         bool leftPredator = isPredatorOf(*animal, left) || isPredatorOf(*animal, leftCenter) || isPredatorOf(*animal, bottomLeft);
 
-                        int deltaX;
+                        int deltaX = 0;
                         if (rightPredator == leftPredator) {
                             deltaX = 0;
                         } else if (rightPredator) {
@@ -84,7 +84,7 @@ namespace cs3210 {
                             deltaX = 1;
                         }
 
-                        int deltaY;
+                        int deltaY = 0;
                         if (topPredator == bottomPredator) {
                             deltaY = 0;
                         } else if (topPredator) {
@@ -93,11 +93,45 @@ namespace cs3210 {
                             deltaY = -1;
                         }
 
+                        if (deltaX != 0 && deltaY != 0) {
+                            deltaY = 0;
+                        }
+
                         animal->setIterated();
                     }
                 }
             }
         }
+    }
+
+    bool Environment::canMoveTo(const Animal& animal, const std::shared_ptr<Unit> unit) {
+        if (unit == nullptr || unit->getUnitType() == UnitType::OBSTACLE) {
+            return false;
+        } else {
+            std::shared_ptr<ViableUnit> viableUnit = std::dynamic_pointer_cast<ViableUnit>(unit);
+            if (viableUnit->getPlant() == nullptr && viableUnit->getAnimal() == nullptr) {
+                return true;
+            } else if (viableUnit->getAnimal() == nullptr) {
+                return canConsume(animal, *viableUnit->getPlant());
+            } else if (viableUnit->getPlant() == nullptr) {
+                return canConsume(animal, *viableUnit->getAnimal());
+            } else {
+                return canConsume(animal, *viableUnit->getPlant()) && canConsume(animal, *viableUnit->getAnimal()) && animal.getEnergy() < animal.getMaxEnergy() - 1;
+            }
+        }
+    }
+
+    bool Environment::canConsume(const Animal& animal, const Plant& plant) {
+        if (plant.getIterationsUntilGrowth() != 0) {
+            return true;
+        }
+        return std::find(animal.getFoodChain().begin(), animal.getFoodChain().end(), plant.toString()) != animal.getFoodChain().end() &&
+               animal.getEnergy() < animal.getMaxEnergy();
+    }
+
+    bool Environment::canConsume(const Animal& animal, const Animal& prey) {
+        return std::find(animal.getFoodChain().begin(), animal.getFoodChain().end(), prey.toString()) != animal.getFoodChain().end() &&
+               animal.getEnergy() < animal.getMaxEnergy();
     }
 
     bool Environment::isPredatorOf(const Animal& animal, const std::shared_ptr<Unit> unit) {
