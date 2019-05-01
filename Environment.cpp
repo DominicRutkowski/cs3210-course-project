@@ -262,7 +262,7 @@ namespace cs3210 {
 
     bool Environment::spawnChild(const Animal& animal, std::vector<std::shared_ptr<Unit>> spawnLocations) {
         for (auto& spawnLocation : spawnLocations) {
-            if (spawnLocation->getUnitType() == UnitType::VIABLE_UNIT) {
+            if (spawnLocation != nullptr && spawnLocation->getUnitType() == UnitType::VIABLE_UNIT) {
                 std::shared_ptr<ViableUnit> viableLocation = std::dynamic_pointer_cast<ViableUnit>(spawnLocation);
                 if (viableLocation->plant == nullptr && viableLocation->animal == nullptr) {
                     // Spawn offspring here
