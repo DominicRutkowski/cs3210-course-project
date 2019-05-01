@@ -108,6 +108,11 @@ namespace cs3210 {
                             destination->animal = std::move(viableUnit->animal);
 
                             destination->animal->setMoved();
+                            
+                            destination->animal->setEnergy(destination->animal->getEnergy() - 1);
+                            if (destination->animal->getEnergy() <= 0) {
+                                destination->animal.reset(); // Animals with no energy die
+                            }
                         } // Otherwise stay put
                     }
                 }
