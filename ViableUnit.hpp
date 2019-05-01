@@ -17,8 +17,9 @@ namespace cs3210 {
     class ViableUnit : public Unit {
     private:
         std::unique_ptr<Plant> plant;
-        std::unique_ptr<Animal> animal;
     public:
+        std::unique_ptr<Animal> animal;
+//    public:
         void iteratePlant();
 
         void setPlant(std::unique_ptr<Plant> plant);

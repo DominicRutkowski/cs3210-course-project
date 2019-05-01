@@ -99,8 +99,15 @@ namespace cs3210 {
                         }
 
                         if (canMoveTo(*animal, getUnit(j + deltaX, k + deltaY))) {
+                            std::shared_ptr<ViableUnit> destination = std::dynamic_pointer_cast<ViableUnit>(getUnit(j + deltaX, k + deltaY));
+                            unsigned int plantEnergy = destination->getPlant() != nullptr ? destination->getPlant()->consume() : 0;
+                            unsigned int animalEnergy = destination->getAnimal() != nullptr ? destination->getAnimal()->getEnergy() : 0;
+                            animal->setEnergy(animal->getEnergy() + plantEnergy + animalEnergy);
+
                             // Move there
-                            animal->setMoved();
+                            destination->animal = std::move(viableUnit->animal);
+
+                            destination->animal->setMoved();
                         } // Otherwise stay put
                     }
                 }
@@ -108,7 +115,7 @@ namespace cs3210 {
         }
     }
 
-    bool Environment::canMoveTo(const Animal& animal, const std::shared_ptr<Unit> unit) {
+    bool Environment::canMoveTo(const Animal& animal, const std::shared_ptr<Unit> unit) {\
         if (unit == nullptr || unit->getUnitType() == UnitType::OBSTACLE) {
             return false;
         } else {

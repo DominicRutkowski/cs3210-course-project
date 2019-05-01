@@ -13,7 +13,11 @@ namespace cs3210 {
     symbol{symbol}, maxEnergy{maxEnergy}, energy{energy} {}
 
     void Organism::setEnergy(unsigned int energy) {
-        this->energy = energy;
+        if (energy >= maxEnergy) {
+            energy = maxEnergy;
+        } else {
+            this->energy = energy;
+        }
     }
 
     const unsigned int Organism::getMaxEnergy() const {
