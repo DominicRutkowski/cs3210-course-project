@@ -1,0 +1,26 @@
+!!!                            @@@       !! aaaaa
+!!   D             B   B      @@@       C !!  aaa
+!!          aa aaa   B      @@@      aa    !    a
+!!!        ccccc aaa       @@@   D   aaa
+!!!!!!        ccc aaa     @@@                A
+!!!!!!!!!        aaa      @@@          !!   A
+!!!!!!!!!!       A        @@@        !!!!!!
+!!!!!!!!!!      A          @@@       !!!!!!!
+!!!!!!!!!    E   B   C      @@@        !!!!!!
+!!!!!!!!    E            bbbb @@     bb !!!!!!
+!!!!!!  C      aaaa      bb  bb@@     bb   !!!
+!!!!  C       aaa aa           @@@ D   b    !
+!!!          aaa aaa      bccb       bb      C
+!!!                           @@@           aaaaa
+!!   D             B   B      @@        C     aaa
+!!          aa aaa   B      @@@      aa         a
+!!!          aaa aaa       @@@   Dc  aaa
+!!!!!!        aaa aaa     @@@   ccc          A
+!!!!!!!!         aaa      @@@E     c   !!   A
+!!!!!!!!!        A        @@@E       !!!!!!
+!!!!!!!!!       A          @@@       !!!!!!!
+!!!!!!!!         B   C                 !!!!!!
+!!!!!!!                  bbbb        bb !!!!!!
+!!!!!   C      aaaa      bb  bb       bb   !!!
+!!!!  C       aaa aa               D   b    !
+!!!          aaa aaa      bbbbbb      bb      C

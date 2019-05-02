@@ -1,0 +1,8 @@
+plant a 1 5
+plant b 3 10
+plant c 3 8
+herbivore A [a, b] 20
+herbivore B [b] 15
+omnivore C [b, c, B, E] 25
+omnivore D [A, E] 40
+omnivore E [A, B, D] 30
