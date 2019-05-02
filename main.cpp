@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
     // Open ./input/map.txt and write its contents to mapStr
     std::vector<std::string> mapLines;
     std::string mapIn;
-    std::fstream mapFile(mapFilePath);
+    std::ifstream mapFile(mapFilePath);
     if (mapFile.is_open()) {
         while (getline(mapFile, mapIn)) {
             mapLines.push_back(mapIn);
@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
     // Open ./input/species.txt and write its contents to speciesStr
     std::vector<std::string> speciesLines;
     std::string speciesIn;
-    std::fstream speciesFile(speciesFilePath);
+    std::ifstream speciesFile(speciesFilePath);
     if (speciesFile.is_open()) {
         while (getline(speciesFile, speciesIn)) {
             speciesLines.push_back(speciesIn);
@@ -61,7 +61,8 @@ int main(int argc, char** argv) {
         getline(std::cin, rawInput);
 
         std::string input = toLowerCase(rawInput);
-        std::string command = input.find(' ') == std::string::npos ? input.substr(0, input.find(' ')) : input;
+        std::string command = input.find(' ') != std::string::npos ? input.substr(0, input.find(' ')) : input;
+        std::string args = rawInput.find(' ') != std::string::npos ? rawInput.substr(rawInput.find(' ') + 1) : "";
 
         // Quit
         if (command == "quit" || command == "q" ||  command == "-1") {
@@ -69,10 +70,17 @@ int main(int argc, char** argv) {
                 std::cerr << "Would you like to save before quiting?" << std::endl;
                 std::string saveResponse;
                 getline(std::cin, saveResponse);
-                std::string saveCommand = toLowerCase(saveResponse.find(' ') == std::string::npos ? saveResponse.substr(0, saveResponse.find(' ')) : saveResponse);
+                std::string saveCommand = toLowerCase(saveResponse.find(' ') != std::string::npos ? saveResponse.substr(0, saveResponse.find(' ')) : saveResponse);
+                std::string saveArgs = saveResponse.find(' ') != std::string::npos ? saveResponse.substr(saveResponse.find(' ') + 1) : "";
+
+                std::cout << "Save command: " << saveCommand << std::endl;
+                std::cout << "Save args: " << saveArgs << std::endl;
 
                 if (saveCommand == "yes" || saveCommand == "y") {
-                    std::fstream saveMap(mapFilePath);
+                    if (!saveArgs.empty()) {
+                        mapFilePath = saveArgs;
+                    }
+                    std::ofstream saveMap(mapFilePath);
                     saveMap << environment.toString();
                     saveMap.close();
                     saved = true;
@@ -82,14 +90,20 @@ int main(int argc, char** argv) {
 
         // Save
         } else if (command == "write" || command == "w" || command == "save" || command == "s") {
-            std::fstream saveMap(mapFilePath);
+            if (!args.empty()) {
+                mapFilePath = args;
+            }
+            std::ofstream saveMap(mapFilePath);
             saveMap << environment.toString();
             saveMap.close();
             saved = true;
 
         // Save and quit
         } else if (command == "wq") {
-            std::fstream saveMap(mapFilePath);
+            if (!args.empty()) {
+                mapFilePath = args;
+            }
+            std::ofstream saveMap(mapFilePath);
             saveMap << environment.toString();
             saveMap.close();
             saved = true;
