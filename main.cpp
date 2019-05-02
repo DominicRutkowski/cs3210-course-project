@@ -21,6 +21,13 @@ bool isUnsignedInt(const std::string& str) {
 
 int main(int argc, char** argv) {
 
+    if (argc != 3) {
+        std::cerr
+            << "Invalid command line arguments.\n"
+            << "Please consult README.md for instructions on running the project."
+            << std::endl;
+        return -1;
+    }
     std::string mapFilePath(argv[1]);
     std::string speciesFilePath(argv[2]);
 
@@ -35,7 +42,7 @@ int main(int argc, char** argv) {
         mapFile.close();
     } else {
         std::cerr << "Error opening " << mapFilePath << std::endl;
-        return -1;
+        return -2;
     }
 
     // Open ./input/species.txt and write its contents to speciesStr
@@ -49,7 +56,7 @@ int main(int argc, char** argv) {
         speciesFile.close();
     } else {
         std::cerr << "Error opening " << speciesFilePath << std::endl;
-        return -2;
+        return -3;
     }
 
     std::stringstream help;
