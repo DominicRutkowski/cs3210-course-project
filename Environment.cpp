@@ -144,24 +144,24 @@ namespace cs3210 {
                                         deltaX = -1;
                                     }
                                 } else {
-                                    double random = rand();
-                                    if (random < 0.25) {
+                                    int random = rand() % 100;
+                                    if (random < 25) {
                                         deltaY = -1;
-                                    } else if (random < 0.5) {
+                                    } else if (random < 50) {
                                         deltaX = 1;
-                                    } else if (random < 0.75) {
+                                    } else if (random < 75) {
                                         deltaY = 1;
                                     } else {
                                         deltaX = -1;
                                     }
                                 }
                             } else {
-                                double random = rand();
-                                if (random < 0.25) {
+                                int random = rand() % 100;
+                                if (random < 25) {
                                     deltaY = -1;
-                                } else if (random < 0.5) {
+                                } else if (random < 50) {
                                     deltaX = 1;
-                                } else if (random < 0.75) {
+                                } else if (random < 75) {
                                     deltaY = 1;
                                 } else {
                                     deltaX = -1;
@@ -230,28 +230,36 @@ namespace cs3210 {
                             if (spawnChild(*animal, spawnLocations)) {
                                 std::shared_ptr<ViableUnit> mateUnit = std::dynamic_pointer_cast<ViableUnit>(topCenter);
                                 animal->setReproduced();
+                                animal->setEnergy((unsigned int) (0.4 * animal->getEnergy()));
                                 mateUnit->animal->setReproduced();
+                                mateUnit->animal->setEnergy((unsigned int) (0.4 * mateUnit->animal->getEnergy()));
                             }
                         } else if (canMateWith(*animal, rightCenter)) {
                             spawnLocations = {topRight, right, bottomRight, bottomCenter, leftCenter, topCenter};
                             if (spawnChild(*animal, spawnLocations)) {
                                 std::shared_ptr<ViableUnit> mateUnit = std::dynamic_pointer_cast<ViableUnit>(rightCenter);
                                 animal->setReproduced();
+                                animal->setEnergy((unsigned int) (0.4 * animal->getEnergy()));
                                 mateUnit->animal->setReproduced();
+                                mateUnit->animal->setEnergy((unsigned int) (0.4 * mateUnit->animal->getEnergy()));
                             }
                         } else if (canMateWith(*animal, bottomCenter)) {
                             spawnLocations = {bottomRight, bottom, bottomLeft, leftCenter, topCenter, rightCenter};
                             if (spawnChild(*animal, spawnLocations)) {
                                 std::shared_ptr<ViableUnit> mateUnit = std::dynamic_pointer_cast<ViableUnit>(bottomCenter);
                                 animal->setReproduced();
+                                animal->setEnergy((unsigned int) (0.4 * animal->getEnergy()));
                                 mateUnit->animal->setReproduced();
+                                mateUnit->animal->setEnergy((unsigned int) (0.4 * mateUnit->animal->getEnergy()));
                             }
                         } else if (canMateWith(*animal, leftCenter)) {
                             spawnLocations = {bottomLeft, left, topLeft, topCenter, rightCenter, bottomCenter};
                             if (spawnChild(*animal, spawnLocations)) {
                                 std::shared_ptr<ViableUnit> mateUnit = std::dynamic_pointer_cast<ViableUnit>(leftCenter);
                                 animal->setReproduced();
+                                animal->setEnergy((unsigned int) (0.4 * animal->getEnergy()));
                                 mateUnit->animal->setReproduced();
+                                mateUnit->animal->setEnergy((unsigned int) (0.4 * mateUnit->animal->getEnergy()));
                             }
                         }
                     }
@@ -266,8 +274,10 @@ namespace cs3210 {
                 std::shared_ptr<ViableUnit> viableLocation = std::dynamic_pointer_cast<ViableUnit>(spawnLocation);
                 if (viableLocation->plant == nullptr && viableLocation->animal == nullptr) {
                     // Spawn offspring here
+                    int random = rand() % 100;
+                    unsigned int energy = (unsigned int) ((random >= 35 ? (double) random / 100 : 0.35) * animal.getMaxEnergy());
                     viableLocation->animal = std::make_unique<Animal>(animal.toString(), animal.getMaxEnergy(),
-                            animal.getMaxEnergy(), animal.getAnimalType(), animal.getFoodChain());
+                            energy, animal.getAnimalType(), animal.getFoodChain());
                     // Prevent an animal from moving or reproducing on the same turn it is born
                     viableLocation->animal->setMoved();
                     viableLocation->animal->setReproduced();
