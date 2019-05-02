@@ -1,0 +1,20 @@
+!!!                            @@@       !! aaaaa$$$
+!!   D             B   B      @@@       C !!  aaa $$
+!    A      aa a&a   B      @@@  D   aa    !   Eaa $
+           c   c&&&&        @@bb D   aaa           $
+       B      ccc&&&&        bb              A    $$
+!!!!!   bb       aa&&                  !!   A     $$
+!!!!!!!          A         @@        !!!!!!     c  $
+!!!!!!!!!!              cc @@@       !!!!!!! cc   $$
+!!!!!!!!!    E   B   C  ccc @@@     bb !!!!!!     $$
+!!!!!!!!    E ac       B bbbb @@     bb !!!!!!   $$$
+!!!            cb             @@        !! aaaaa  $$
+!!   D             B   B      @         C !!  aaa $$
+!           aa aaa   B      @@@  D   aa    !   Eaa $
+           cc  c aaa    @@@@@@bb D   aaa           $
+              ccc aaa    @@     bb           A
+!!!!!      D  A  aaa         @         !!   A    bba
+!!!!!!!   D      A         @@  ac    !!!!!!   ccc  $
+!!!!!!!!!!              cc @@@       !!!!!!! cc   $$
+!!!!!!!!!    E   B   C  ccc @@@     bb !!!!!!     $$
+!!!!!!!!    E          B bbbb @@     bb !!!!!!   $$$
