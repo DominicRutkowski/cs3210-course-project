@@ -20,11 +20,11 @@ namespace cs3210 {
         }
     }
 
-    const unsigned int Organism::getMaxEnergy() const {
+    unsigned int Organism::getMaxEnergy() const {
         return maxEnergy;
     }
 
-    const unsigned int Organism::getEnergy() const {
+    unsigned int Organism::getEnergy() const {
         return energy;
     }
 

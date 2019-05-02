@@ -14,8 +14,8 @@ namespace cs3210 {
         const std::string symbol;
     public:
         Obstacle(const std::string& symbol);
-        const std::string toString() const override;
-        const UnitType getUnitType() const override;
+        std::string toString() const override;
+        UnitType getUnitType() const override;
     };
 
 }

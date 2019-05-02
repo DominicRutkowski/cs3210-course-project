@@ -19,9 +19,9 @@ namespace cs3210 {
         Organism(const std::string& symbol, const unsigned int maxEnergy);
         Organism(const std::string& symbol, const unsigned int maxEnergy, unsigned int energy);
         void setEnergy(unsigned int energy);
-        const unsigned int getMaxEnergy() const;
-        const unsigned int getEnergy() const;
-        virtual const std::string toString() const = 0;
+        unsigned int getMaxEnergy() const;
+        unsigned int getEnergy() const;
+        virtual std::string toString() const = 0;
     };
 
 }

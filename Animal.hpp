@@ -28,8 +28,8 @@ namespace cs3210 {
         void setReproduced(bool reproduced = true);
         bool hasMoved() const;
         bool hasReproduced() const;
-        const std::string toString() const override;
-        const AnimalType getAnimalType() const;
+        std::string toString() const override;
+        AnimalType getAnimalType() const;
     };
 
 }

@@ -21,8 +21,8 @@ namespace cs3210 {
 
         void iteratePlant();
 
-        const std::string toString() const override;
-        const UnitType getUnitType() const override;
+        std::string toString() const override;
+        UnitType getUnitType() const override;
     };
 
 }

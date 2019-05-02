@@ -31,11 +31,11 @@ namespace cs3210 {
         return reproduced;
     }
 
-    const std::string Animal::toString() const {
+    std::string Animal::toString() const {
         return symbol;
     }
 
-    const AnimalType Animal::getAnimalType() const {
+    AnimalType Animal::getAnimalType() const {
         return animalType;
     }
 

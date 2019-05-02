@@ -9,11 +9,11 @@ namespace cs3210 {
     Obstacle::Obstacle(const std::string& symbol):
     symbol{symbol} {}
 
-    const std::string Obstacle::toString() const {
+    std::string Obstacle::toString() const {
         return symbol;
     }
 
-    const UnitType Obstacle::getUnitType() const {
+    UnitType Obstacle::getUnitType() const {
         return UnitType::OBSTACLE;
     }
 

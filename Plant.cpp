@@ -20,11 +20,11 @@ namespace cs3210 {
         return maxEnergy;
     }
 
-    const unsigned int Plant::getIterationsUntilGrowth() const {
+    unsigned int Plant::getIterationsUntilGrowth() const {
         return iterationsUntilGrowth;
     }
 
-    const std::string Plant::toString() const {
+    std::string Plant::toString() const {
         if (iterationsUntilGrowth <= 0) {
             return symbol;
         }
