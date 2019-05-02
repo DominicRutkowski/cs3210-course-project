@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -51,8 +52,23 @@ int main(int argc, char** argv) {
         return -2;
     }
 
+    std::stringstream help;
+    help
+        << "Available commands:\n"
+        << "(quit, q, -1) - Quits the program instance\n"
+        << "    (yes, y) [optional path] - Saves the ecosystem map at path (or the original path if unspecified) before quitting\n"
+        << "(write, w, save, s) [optional path] - Saves the ecosystem map at path (or the original path if unspecified)\n"
+        << "(wq) [optional path] - Saves the ecosystem map at path (or the original path if unspecified) and quits\n"
+        << "[whole number n] - Runs n iterations of the ecosystem\n"
+        << "no command - Runs 1 iteration of the ecosystem\n"
+        << "(help, h) - Displays this list of commands";
+
     cs3210::Environment environment(mapLines, speciesLines);
-    std::cout << "Initial environment:\n" << environment.toString() << "\n" << std::endl;
+    std::cout << "\nWelcome to Dominic Rutkowski's CS:3210 course project!\n\n"
+              << help.str()
+              << "\n\n"
+              << "Initial environment:\n"
+              << environment.toString() << "\n" << std::endl;
 
     bool saved = true;
     std::string rawInput;
@@ -72,9 +88,6 @@ int main(int argc, char** argv) {
                 getline(std::cin, saveResponse);
                 std::string saveCommand = toLowerCase(saveResponse.find(' ') != std::string::npos ? saveResponse.substr(0, saveResponse.find(' ')) : saveResponse);
                 std::string saveArgs = saveResponse.find(' ') != std::string::npos ? saveResponse.substr(saveResponse.find(' ') + 1) : "";
-
-                std::cout << "Save command: " << saveCommand << std::endl;
-                std::cout << "Save args: " << saveArgs << std::endl;
 
                 if (saveCommand == "yes" || saveCommand == "y") {
                     if (!saveArgs.empty()) {
@@ -118,6 +131,11 @@ int main(int argc, char** argv) {
         } else if (input.empty()) {
             environment.iterate();
             saved = false;
+
+        // Display the help menu
+        } else if (command == "help" || command == "h") {
+            std::cout << "\n" << help.str() << "\n" << std::endl;
+            continue;
 
         // Invalid command, quit
         } else {
