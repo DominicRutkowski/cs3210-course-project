@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
         // Quit
         if (command == "quit" || command == "q" ||  command == "-1") {
             if (!saved) {
-                std::cerr << "Would you like to save before quiting?" << std::endl;
+                std::cout << "Would you like to save before quiting?" << std::endl;
                 std::string saveResponse;
                 getline(std::cin, saveResponse);
                 std::string saveCommand = toLowerCase(saveResponse.find(' ') != std::string::npos ? saveResponse.substr(0, saveResponse.find(' ')) : saveResponse);
