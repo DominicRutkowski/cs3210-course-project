@@ -380,40 +380,52 @@ namespace cs3210 {
     }
 
     std::shared_ptr<Unit> Environment::parseUnit(char ch, const std::vector<std::string>& speciesLines) const {
-        for (auto& speciesDefinition : speciesLines) {
-            unsigned int typeCharIndex = speciesDefinition.find(' ') + 1;
-            char typeChar = speciesDefinition.at(typeCharIndex);
-            if (ch == typeChar) { // Occupied space
-                std::unique_ptr<ViableUnit> unit(new ViableUnit());
+        try {
+            for (auto &speciesDefinition : speciesLines) {
+                unsigned int typeCharIndex = speciesDefinition.find(' ') + 1;
+                char typeChar = speciesDefinition.at(typeCharIndex);
+                if (ch == typeChar) { // Occupied space
+                    std::unique_ptr<ViableUnit> unit(new ViableUnit());
 
-                std::string organismClassification = speciesDefinition.substr(0, typeCharIndex - 1);
-                if (organismClassification == "plant") {
-                    int div = speciesDefinition.find(' ', 8);
-                    unsigned int regrowthCoefficient = std::stoi(speciesDefinition.substr(8, div - 8));
-                    unsigned int energy = std::stoi(speciesDefinition.substr(div + 1));
+                    std::string organismClassification = speciesDefinition.substr(0, typeCharIndex - 1);
+                    if (organismClassification == "plant") {
+                        int div = speciesDefinition.find(' ', 8);
+                        unsigned int regrowthCoefficient = std::stoi(speciesDefinition.substr(8, div - 8));
+                        unsigned int energy = std::stoi(speciesDefinition.substr(div + 1));
 
-                    unit->plant = std::make_unique<Plant>(std::string(1, ch), energy, regrowthCoefficient);
-                } else {
-                    unsigned int energy = std::stoi(speciesDefinition.substr(speciesDefinition.find(']') + 2));
+                        unit->plant = std::make_unique<Plant>(std::string(1, ch), energy, regrowthCoefficient);
+                    } else {
+                        unsigned int energy = std::stoi(speciesDefinition.substr(speciesDefinition.find(']') + 2));
 
-                    std::string foodChainStr = speciesDefinition.substr(speciesDefinition.find('[') + 1, speciesDefinition.find(']') - speciesDefinition.find('[') - 1);
-                    std::vector<std::string> foodChain;
-                    for (int i = 0; i < foodChainStr.length(); ++i) {
-                        if (i % 3 == 0) {
-                            foodChain.emplace_back(1, foodChainStr[i]);
+                        std::string foodChainStr = speciesDefinition.substr(speciesDefinition.find('[') + 1,
+                                                                            speciesDefinition.find(']') -
+                                                                            speciesDefinition.find('[') - 1);
+                        std::vector<std::string> foodChain;
+                        for (int i = 0; i < foodChainStr.length(); ++i) {
+                            if (i % 3 == 0) {
+                                foodChain.emplace_back(1, foodChainStr[i]);
+                            }
                         }
-                    }
 
-                    AnimalType animalType = organismClassification == "herbivore" ? AnimalType::HERBIVORE : AnimalType::OMNIVORE;
-                    unit->animal = std::make_unique<Animal>(std::string(1, ch), energy, energy, animalType, foodChain);
+                        AnimalType animalType =
+                                organismClassification == "herbivore" ? AnimalType::HERBIVORE : AnimalType::OMNIVORE;
+                        unit->animal = std::make_unique<Animal>(std::string(1, ch), energy, energy, animalType,
+                                                                foodChain);
+                    }
+                    return unit;
                 }
-                return unit;
             }
-        }
-        if (ch == ' ') { // Empty space
-            return std::shared_ptr<ViableUnit>(new ViableUnit());
-        } else { // Obstacle
-            return std::shared_ptr<Obstacle>(new Obstacle(std::string(1, ch)));
+            if (ch == ' ') { // Empty space
+                return std::shared_ptr<ViableUnit>(new ViableUnit());
+            } else { // Obstacle
+                return std::shared_ptr<Obstacle>(new Obstacle(std::string(1, ch)));
+            }
+        } catch (const std::exception& exception) {
+            std::cerr
+                << "An error occurred when parsing the input files:\n"
+                << exception.what()
+                << std::endl;
+            exit(-4);
         }
     }
 
