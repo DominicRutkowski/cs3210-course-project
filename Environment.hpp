@@ -29,17 +29,14 @@ namespace cs3210 {
 
         void iterateAnimals(AnimalType animalType);
 
-        bool spawnChild(const Animal& animal, std::vector<std::shared_ptr<Unit>> spawnLocations);
+        bool spawnChild(const Animal& animal, const std::vector<std::shared_ptr<Unit>>& spawnLocations);
 
-        bool canMoveTo(const Animal& animal, const std::shared_ptr<Unit> unit);
+        bool canMoveTo(const Animal& animal, const std::shared_ptr<Unit>& unit);
         bool canConsume(const Animal& animal, const Plant& plant);
         bool canConsume(const Animal& animal, const Animal& prey);
-        bool isPredatorOf(const Animal& animal, const std::shared_ptr<Unit> unit);
-        bool canMateWith(const Animal& animal, const std::shared_ptr<Unit> unit);
-        unsigned int availableEnergy(const Animal& animal, const std::shared_ptr<Unit> unit);
-
-        int nextX(int x, int y);
-        int nextY(int x, int y);
+        bool isPredatorOf(const Animal& animal, const std::shared_ptr<Unit>& unit);
+        bool canMateWith(const Animal& animal, const std::shared_ptr<Unit>& unit);
+        unsigned int availableEnergy(const Animal& animal, const std::shared_ptr<Unit>& unit);
 
         std::shared_ptr<Unit> parseUnit(char ch, const std::vector<std::string>& speciesLines) const;
         std::shared_ptr<Unit> getUnit(int x, int y);

@@ -260,19 +260,18 @@ namespace cs3210 {
         }
     }
 
-    bool Environment::spawnChild(const Animal& animal, std::vector<std::shared_ptr<Unit>> spawnLocations) {
+    bool Environment::spawnChild(const Animal& animal, const std::vector<std::shared_ptr<Unit>>& spawnLocations) {
         for (auto& spawnLocation : spawnLocations) {
             if (spawnLocation != nullptr && spawnLocation->getUnitType() == UnitType::VIABLE_UNIT) {
                 std::shared_ptr<ViableUnit> viableLocation = std::dynamic_pointer_cast<ViableUnit>(spawnLocation);
                 if (viableLocation->plant == nullptr && viableLocation->animal == nullptr) {
                     // Spawn offspring here
-                    viableLocation->animal = std::unique_ptr<Animal>(new Animal(animal.toString(), animal.getMaxEnergy(),
-                            animal.getMaxEnergy(), animal.getAnimalType(), animal.getFoodChain()));
+                    viableLocation->animal = std::make_unique<Animal>(animal.toString(), animal.getMaxEnergy(),
+                            animal.getMaxEnergy(), animal.getAnimalType(), animal.getFoodChain());
                     // Prevent an animal from moving or reproducing on the same turn it is born
                     viableLocation->animal->setMoved();
                     viableLocation->animal->setReproduced();
 
-                    std::cout << "Spawned child" << std::endl;
                     return true;
                 }
             }
@@ -280,7 +279,7 @@ namespace cs3210 {
         return false;
     }
 
-    bool Environment::canMoveTo(const Animal& animal, const std::shared_ptr<Unit> unit) {
+    bool Environment::canMoveTo(const Animal& animal, const std::shared_ptr<Unit>& unit) {
         if (unit == nullptr || unit->getUnitType() == UnitType::OBSTACLE) {
             return false;
         } else {
@@ -311,7 +310,7 @@ namespace cs3210 {
                animal.getEnergy() < animal.getMaxEnergy();
     }
 
-    bool Environment::isPredatorOf(const Animal& animal, const std::shared_ptr<Unit> unit) {
+    bool Environment::isPredatorOf(const Animal& animal, const std::shared_ptr<Unit>& unit) {
         if (unit == nullptr || unit->getUnitType() == UnitType::OBSTACLE) {
             return false;
         } else {
@@ -325,7 +324,7 @@ namespace cs3210 {
         }
     }
 
-    bool Environment::canMateWith(const Animal& animal, const std::shared_ptr<Unit> unit) {
+    bool Environment::canMateWith(const Animal& animal, const std::shared_ptr<Unit>& unit) {
         if (unit == nullptr || unit->getUnitType() == UnitType::OBSTACLE) {
             return false;
         } else {
@@ -340,7 +339,7 @@ namespace cs3210 {
         }
     }
 
-    unsigned int Environment::availableEnergy(const Animal& animal, const std::shared_ptr<Unit> unit) {
+    unsigned int Environment::availableEnergy(const Animal& animal, const std::shared_ptr<Unit>& unit) {
         if (unit == nullptr || unit->getUnitType() == UnitType::OBSTACLE) {
             return false;
         } else {
@@ -360,8 +359,8 @@ namespace cs3210 {
     std::string Environment::toString() const {
         std::string result;
         for (int i = 0; i < grid.size(); ++i) {
-            for (int j = 0; j < grid[i].size(); ++j) {
-                result += grid[i][j]->toString();
+            for (const auto& j : grid[i]) {
+                result += j->toString();
             }
             if (i < grid.size() - 1) {
                 result += "\n";
@@ -383,7 +382,7 @@ namespace cs3210 {
                     unsigned int regrowthCoefficient = std::stoi(speciesDefinition.substr(8, div - 8));
                     unsigned int energy = std::stoi(speciesDefinition.substr(div + 1));
 
-                    unit->plant = std::unique_ptr<Plant>(new Plant(std::string(1, ch), energy, regrowthCoefficient));
+                    unit->plant = std::make_unique<Plant>(std::string(1, ch), energy, regrowthCoefficient);
                 } else {
                     unsigned int energy = std::stoi(speciesDefinition.substr(speciesDefinition.find(']') + 2));
 
@@ -391,12 +390,12 @@ namespace cs3210 {
                     std::vector<std::string> foodChain;
                     for (int i = 0; i < foodChainStr.length(); ++i) {
                         if (i % 3 == 0) {
-                            foodChain.push_back(std::string(1, foodChainStr[i]));
+                            foodChain.emplace_back(1, foodChainStr[i]);
                         }
                     }
 
                     AnimalType animalType = organismClassification == "herbivore" ? AnimalType::HERBIVORE : AnimalType::OMNIVORE;
-                    unit->animal = std::unique_ptr<Animal>(new Animal(std::string(1, ch), energy, energy, animalType, foodChain));
+                    unit->animal = std::make_unique<Animal>(std::string(1, ch), energy, energy, animalType, foodChain);
                 }
                 return unit;
             }
