@@ -22,3 +22,8 @@ it clear that the project is functioning properly. Note that the
 extra tests are located in the `/input` folder. The test numbered
 `0` is that which was provided at the beginning of the project,
 but all other tests are my own.
+* Sometimes it appears as though an animal is jumping back and forth
+between two spaces ad infinitum and never eating anything. This is
+an illusion. What is happening is that a plant keeps regrowing and
+the animal in question eats it instantly. Because the actions take
+place on the same iteration, you cannot observe it happening.
